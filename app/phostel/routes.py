@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, render_template_string, send_from_directory, abort, Blueprint, current_app, abort
 import os
-# from PIL import Image
+from PIL import Image as PILImage
+import mimetypes
 from flask_login import login_required, current_user
 import sqlite3
 from werkzeug.utils import secure_filename
@@ -65,6 +66,14 @@ def upload():
 def images(item_id):
     image = Image.query.get(str(item_id))
 
+    image_path = os.path.join(os.getcwd(), 'static', 'uploads', image.filename)
+
+    try:
+        with PILImage.open(image_path) as img:
+            width, height = img.size
+    except Exception as e:
+        return f"Error opening image: {e}", 500
+
     if not image:
         abort(404)
     
@@ -81,7 +90,7 @@ def images(item_id):
 
     like_count = Like.query.filter_by(image_id=image.id).count()
 
-    return render_template('gambar.html', image=image, humanized_time=humanized_time, images=user_img, auth=auth, user=user, current_user=current_user, tags=image.tag, liked=liked, like_count=like_count)
+    return render_template('gambar.html', image=image, humanized_time=humanized_time, images=user_img, auth=auth, user=user, current_user=current_user, tags=image.tag, liked=liked, like_count=like_count, dimen={'width': width, 'height': height})
 
 @phostel.route('/u/<user_id>')
 def user(user_id):
@@ -171,6 +180,16 @@ def post():
     file = request.files['image']
     if file.filename == '':
         return "No selected file", 400
+    
+    try:
+        # Open the image using Pillow (without saving to disk first)
+        img = PILImage.open(file)
+        img.verify()  # Verify the image without loading it into memory
+
+        # Re-open the image because 'verify()' doesn't load it into memory
+        img = PILImage.open(file)
+    except (IOError, SyntaxError) as e:
+        return "File is not a valid image", 400
 
     title = request.form.get('title', '').strip()
     tag = request.form.get('tag', '').strip()
@@ -185,7 +204,7 @@ def post():
 
     # Save file
     file_path = os.path.join(upload_folder, unique_filename)
-    file.save(file_path)
+    img.save(file_path, format="JPEG", quality=80, optimize=True)
 
     # Save metadata to DB
     new_image = Image(
@@ -211,6 +230,10 @@ def download(image_id):
     # Kemungkinan filenya ada di static uplod trus di download user yayayayaya
     upload_dir = os.path.join(os.getcwd(), 'static', 'uploads')
     return send_from_directory(upload_dir, image.filename, as_attachment=True)
+
+@phostel.route('/tentang')
+def about():
+    return render_template('tentang.html')
 
 @phostel.route('/like/<image_id>', methods=['POST'])
 @login_required

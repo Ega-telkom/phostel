@@ -15,7 +15,7 @@
 
 <body class="login-bg">
     
-    {% include 'navbar.html' %}
+    {% include 'navbar-signup.html' %}
 
     </div>
     <main class="mt-18 mx-auto max-w-7xl text-sm m-5">
@@ -29,7 +29,7 @@
                     <div>
                         <form method="POST" class="grid gap-5">
                             {{ form.hidden_tag() }}
-                            <div>
+                            <div> 
                                 <label for="username">Email</label>
                                 {{ form.email }}
                             </div>

@@ -13,7 +13,7 @@
         </div>
         <div class="text-sm flex items-center">
             <div id="nav-actions" class="hidden md:flex">
-                <a class="flex item-center active:bg-sky-900 hover:bg-sky-600 bg-biru-politik text-abu-indie p-2 rounded-md" href="{{ url_for('phostel.upload') }}"><span class="material-symbols-outlined mr-2">upload</span>Unggah</a>
+                <a class="flex item-center active:bg-sky-900 hover:bg-sky-600 bg-biru-politik text-abu-indie p-2 rounded-md" href="{{ url_for('auth.login') }}"><span class="material-symbols-outlined mr-2">login</span>Masuk</a>
                 {% if auth %}
                 <button data-dropdown-toggle="dropdown-small" type="button" class="hidden md:flex cursor-pointer item-center text-sm ml-5">
                     {% if current_user.picture %}

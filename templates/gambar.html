@@ -9,6 +9,7 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='photoswipe/photoswipe.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet"/>
     <meta name="theme-color" content="#DADADA">
 </head>
@@ -19,8 +20,10 @@
 
     <main class="mt-20 mx-auto max-w-7xl text-sm m-5">
         <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-10 mb-10">
-            <div>
-                <img class="gallery" src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.title or image.filename }}">
+            <div id="gallery">
+                <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}" data-pswp-width="{{ dimen.width }}" data-pswp-height="{{ dimen.height }}">
+                    <img class="gallery" src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.title or image.filename }}">
+                </a>
             </div>
             <div class="flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)] no-scrollbar">
                 <div class="grid gap-3">
@@ -78,7 +81,8 @@
                 </div>
             </div>
         </div>
-        <!--<p class="mb-5 !text-base">Image is worth of a thousand words. <span class="text-biru-politik">Search those words above <span class="material-symbols-outlined">arrow_insert</span></span></p>-->
+
+        <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true"></div>
     </main>
 
     {% include 'footer.html' %}      
@@ -90,5 +94,18 @@
             .then(() => alert('Copied to clipboard!'))
             .catch(err => alert('Failed to copy: ' + err));
         }
-      </script>
+    </script>
+
+    <script type="module">
+        import PhotoSwipeLightbox from '/static/photoswipe/photoswipe-lightbox.esm.js';
+        import PhotoSwipe from '/static/photoswipe/photoswipe.esm.js';
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '#gallery',
+            children: 'a',
+            pswpModule: () => PhotoSwipe
+        });
+        lightbox.init();
+    </script>
+
 </html>
