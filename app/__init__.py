@@ -18,7 +18,9 @@ def create_app():
 
     # Safe config setup
     upload_folder = os.path.join(os.getcwd(), 'static/uploads')
+    profile_folder = os.path.join(os.getcwd(), 'static/u_profile')
     os.makedirs(upload_folder, exist_ok=True)
+    os.makedirs(profile_folder, exist_ok=True)
     app.config['UPLOAD_FOLDER'] = upload_folder
 
     # App configuration for SQLAlchemy

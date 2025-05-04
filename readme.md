@@ -21,6 +21,6 @@ venv\Scripts\activate.bat
 ```
 
 Untuk memasang keperluan-keperluan website
-``
+```
 pip install -r requirements.txt
-``
+```
