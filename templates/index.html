@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+    <script src="{{ url_for('static', filename='scripts/script.js') }}" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
+    <meta name="theme-color" content="#DADADA">
+</head>
+
+<body class="bg-abu-indie p-2">
+
+    {% include 'navbar.html' %}
+
+    <main class="mt-20 mx-auto max-w-7xl text-sm m-5">
+        <!--<p class="mb-5 !text-base">Image is worth of a thousand words. <span class="text-biru-politik">Search those words above <span class="material-symbols-outlined">arrow_insert</span></span></p>-->
+        <div class="column">
+            {% for image in images %}
+            <div class="box">
+                <a href="{{ url_for('phostel.images', item_id=image.id) }}">
+                  <img class="gallery" src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.title or image.filename }}" width="200" href>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    </body>
+</html>

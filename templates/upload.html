@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <meta name="theme-color" content="#DADADA">
+</head>
+
+<body class="bg-abu-indie p-2">
+    
+    {% include 'navbar.html' %}
+
+    <main class="mt-20 mx-auto max-w-7xl text-sm m-5">
+        <p class="text-abu-gelap text-2xl mb-2">Unggah ke Phostel</p> <br>
+
+        <form action="/post" method="POST" enctype="multipart/form-data">
+          <label for="title">Judul (Opsional): </label> <br>
+        <div class="flex md:w-96 item-center border border-solid border-abu-putih rounded-md p-2 text-sm">
+            <textarea type="text" rows="5" cols="20" name="title" id="title" placeholder="Judul yang unik" class="border-none w-md"></textarea>
+        </div>
+        <br>
+        <div id="chipWrapper" class="flex-wrap flex gap-2">
+            <input type="text" class="border-abu-putih border p-1 px-2 rounded-md focus:outline-none focus:ring-0" id="tagInput" placeholder="Ketik tag lalu Enter...">
+        </div>
+        <input type="hidden" name="tag" id="hiddenTags">
+
+          <br><br>
+          <div style="border: dashed 1px; padding: 5px">
+                <p>Tarik dan lepas ke sini gambarnya</p>
+              <input type="file" name="image" accept="image/*">
+              <button class="flex item-center bg-biru-politik text-abu-indie p-2 rounded-md" type="submit">Unggah</button>
+          </div>
+        </form>
+
+        <!--<p class="mb-5 !text-base">Image is worth of a thousand words. <span class="text-biru-politik">Search those words above <span class="material-symbols-outlined">arrow_insert</span></span></p>-->
+    </main>
+
+    {% include 'footer.html' %}
+
+    </body>
+
+    <script>
+        const input = document.getElementById('tagInput');
+        const chipWrapper = document.getElementById('chipWrapper');
+        const hiddenTags = document.getElementById('hiddenTags');
+        const tags = new Set();
+      
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && input.value.trim() !== '') {
+            e.preventDefault();
+            addTag(input.value.trim());
+            input.value = '';
+          }
+        });
+      
+        function addTag(tag) {
+            if (tags.has(tag)) return;
+                tags.add(tag);
+
+            const chip = document.createElement('span');
+            chip.className = "flex item-center border-abu-putih border p-1 px-2 rounded-md";
+
+            const tagText = document.createElement('span');
+            tagText.textContent = tag;
+
+            const removeBtn = document.createElement('span');
+            removeBtn.textContent = 'close';
+            removeBtn.className = "material-symbols-outlined ml-2 text-abu-gelap cursor-pointer";
+            removeBtn.addEventListener('click', () => {
+                chip.remove();
+                tags.delete(tag);
+                updateHiddenInput();
+            });
+
+            chip.appendChild(tagText);
+            chip.appendChild(removeBtn);
+            chipWrapper.insertBefore(chip, input);
+            updateHiddenInput();
+        }
+
+      
+        function updateHiddenInput() {
+          hiddenTags.value = Array.from(tags).join(';');
+        }
+      </script>
+      
+</html>

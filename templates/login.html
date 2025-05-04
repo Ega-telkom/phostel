@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <meta name="theme-color" content="#DADADA">
+</head>
+
+<body class="login-bg">
+    
+    {% include 'navbar.html' %}
+
+    </div>
+    <main class="mt-18 mx-auto max-w-7xl text-sm m-5">
+        <div class="bg-abu-indie mx-auto md:mx-0 max-w-full grid grid-cols-1 md:grid-cols-2 gap-5 xl:gap-10 mb-10">
+            <div>
+                <div class="flex flex-col justify-between p-2 gap-3 px-10 py-10 md:max-w-md">
+                    <div class="mb-5">
+                        <p class="text-xl mb-2">Eiitss, Kalo mau post login dulu !!!
+                                            <p class="text-abu-gelap">Login Lewat Sini.</p>
+                    </div>
+                    <div>
+                        <form method="POST" class="grid gap-5">
+                            {{ form.hidden_tag() }}
+                            <div>
+                                <label for="username">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div>
+                                <label for="username">Password</label>
+                                {{ form.password }}
+                            </div>
+                            <div class="grid">
+                                {{ form.submit }} 
+                            </div>
+                            <p>Belum pernah daftar? <a href="{{ url_for('auth.signup') }}" class="text-biru-politik">Daftar sini!</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex">
+                <img class="h-dvh w-full object-cover" src="{{ url_for('static', filename='assets/img/greet-bg.png') }}" alt="">
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+</body>
+
+</html>

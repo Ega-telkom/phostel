@@ -1,0 +1,40 @@
+.material-symbols-outlined {
+    font-size: 20px !important;
+}
+
+.column {
+    max-width: 1280px;
+    columns: 4 220px;
+    column-gap: 0.5rem;
+    font-size: 1.2rem;
+}
+.box {
+    color: white;
+    margin: 0 0 0.2rem;
+    display: inline-block;
+    width: 100%;
+}
+  
+.gallery {
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+}
+ 
+.gallery:hover{
+    -webkit-filter: brightness(70%);
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+.login-bg {
+    background-image: url(/assets/images/phostel-bg.png);
+    background-color: #DADADA;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 50vw, auto;
+    background-position: right;
+}

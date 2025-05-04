@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <meta name="theme-color" content="#DADADA">
+</head>
+
+<body class="bg-abu-indie py-2 px-5">
+    
+    {% include 'navbar.html' %}
+
+    <main class="mt-25 mx-auto max-w-7xl text-sm m-5">
+        <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-5 xl:gap-10 mb-10">
+            <div class="item-baseline">
+                <div class="mb-5" data-modal-target="static-modal" data-modal-toggle="static-modal">
+                    {% if user.picture %}
+                    <div class="relative h-32 w-32">
+                        <img src="{{ url_for('static', filename=user.picture) }}" alt="Profile Picture" class="mr-2 w-32 h-32 object-cover rounded-full">
+                        {% if owner %}
+                        <button onclick="document.getElementById('profile_picture').click();" class="absolute bottom-0 active:bg-sky-900 hover:bg-sky-600 shadow-md right-0 bg-biru-politik rounded-full w-10 h-10 flex items-center justify-center"><span class="material-symbols-outlined text-abu-indie">edit</span></button>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="relative">
+                        <div class="mr-2 w-32 h-32 object-cover rounded-full bg-neutral-400 text-neutral-100 flex items-center justify-center select-none">
+                            <div class="text-4xl">{{ user.username[0:1]|upper }}</div>
+                        </div>
+                        {% if owner %}
+                        <button onclick="document.getElementById('profile_picture').click();" class="absolute bottom-0 active:bg-sky-900 hover:bg-sky-600 shadow-md right-0 bg-biru-politik rounded-full w-10 h-10 flex items-center justify-center"><span class="material-symbols-outlined text-abu-indie">edit</span></button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="flex item-center">
+                        <p class="text-xl mb-2"><span class="text-abu-gelap text-wrap"></span>{{ user.username }}</p>
+                    </div>
+                    <p>{{ upload_count }} Unggahan</p>
+                    <p><span class="text-abu-gelap">Bergabung sejak</span> {{ humanized_time }}</p>
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('phostel.user_profile') }}" id="profileForm">
+                        <input type="file" name="profile_picture" accept="image/*" required id="profile_picture" class="hidden" onchange="this.form.submit()">
+                    </form>
+                </div>
+            </div>
+            <div class="flex flex-col col-span-2 gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)] no-scrollbar">
+                <p class="text-xl mb-2">Unggahan {{ user.username }}</p>
+                <div class="column">
+                    {% for image in images %}
+                    <div class="box">
+                        <a href="{{ url_for('phostel.images', item_id=image.id) }}">
+                        <img class="gallery" src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.title or image.filename }}" width="200" href>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    </body>
+</html>

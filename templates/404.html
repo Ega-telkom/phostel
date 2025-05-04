@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <meta name="theme-color" content="#DADADA">
+</head>
+
+<body class="bg-abu-indie p-5">
+
+    {% include 'navbar.html' %}
+
+    <main class="mt-30 mx-auto max-w-7xl m-5 text-sm m-5">
+        <!--<p class="mb-5 !text-base">Image is worth of a thousand words. <span class="text-biru-politik">Search those words above <span class="material-symbols-outlined">arrow_insert</span></span></p>-->
+        <div>
+            <img class="h-30 xl:h-50 mb-5" src="{{ url_for('static', filename='assets/img/404.png') }}" alt="">
+            <p class="text-abu-gelap text-2xl mb-2">Aduh, tak dapat mencari "{{ query }}"</p>
+            <p class="text-abu-gelap mb-2">Coba: </p>
+            <div class="text-abu-gelap ml-8">
+                <li>Cari yang lainnya, atau</li>
+                <li>Mengetik dengan benar.</li>
+            </div>
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+</body>
+
+</html>
