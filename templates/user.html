@@ -25,7 +25,7 @@
                     <div class="relative h-32 w-32">
                         <img src="{{ url_for('static', filename=user.picture) }}" alt="Profile Picture" class="mr-2 w-32 h-32 object-cover rounded-full">
                         {% if owner %}
-                        <button onclick="document.getElementById('profile_picture').click();" class="absolute bottom-0 active:bg-sky-900 hover:bg-sky-600 shadow-md right-0 bg-biru-politik rounded-full w-10 h-10 flex items-center justify-center"><span class="material-symbols-outlined text-abu-indie">edit</span></button>
+                        <button onclick="document.getElementById('profile_picture').click();" class="cursor-pointer absolute bottom-0 active:bg-sky-900 hover:bg-sky-600 shadow-md right-0 bg-biru-politik rounded-full w-10 h-10 flex items-center justify-center"><span class="material-symbols-outlined text-abu-indie">edit</span></button>
                         {% endif %}
                     </div>
                     {% else %}
@@ -34,7 +34,7 @@
                             <div class="text-4xl">{{ user.username[0:1]|upper }}</div>
                         </div>
                         {% if owner %}
-                        <button onclick="document.getElementById('profile_picture').click();" class="absolute bottom-0 active:bg-sky-900 hover:bg-sky-600 shadow-md right-0 bg-biru-politik rounded-full w-10 h-10 flex items-center justify-center"><span class="material-symbols-outlined text-abu-indie">edit</span></button>
+                        <button onclick="document.getElementById('profile_picture').click();" class="cursor-pointer absolute bottom-0 active:bg-sky-900 hover:bg-sky-600 shadow-md right-0 bg-biru-politik rounded-full w-10 h-10 flex items-center justify-center"><span class="material-symbols-outlined text-abu-indie">edit</span></button>
                         {% endif %}
                     </div>
                     {% endif %}
@@ -51,6 +51,7 @@
                 </div>
             </div>
             <div class="flex flex-col col-span-2 gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)] no-scrollbar">
+                {% if images %}
                 <p class="text-xl mb-2">Unggahan {{ user.username }}</p>
                 <div class="column">
                     {% for image in images %}
@@ -61,6 +62,10 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                <p class="text-xl text-abu-gelap mb-2">¯\_(ツ)_/¯</p>
+                <p class="text-xl text-abu-gelap mb-2">Tiada unggahan dari {{ user.username }}</p>
+                {% endif %}
             </div>
         </div>
     </main>
