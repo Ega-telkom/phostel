@@ -257,3 +257,29 @@ def like(image_id):
 
     db.session.commit()
     return redirect(request.referrer or url_for('phostel.index'))
+
+@phostel.route('/del/<uuid:image_id>', methods=['POST'])
+@login_required
+def delete(image_id):
+    image = Image.query.get(str(image_id))
+
+    if not image:
+        abort(404, description="Image not found")
+
+    # Check if the current user owns the image
+    if image.user_id != current_user.id:
+        abort(403, description="You are not authorized to delete this image")
+
+    # Optionally delete the image file from disk
+    try:
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], image.filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    except Exception as e:
+        print(f"Error deleting file: {e}")
+
+    # Delete from the database
+    db.session.delete(image)
+    db.session.commit()
+
+    return redirect(url_for('phostel.index'))

@@ -5,3 +5,4 @@ u_profiles/
 uploads/
 instance/
 node_modules/
+static/styles/output.css

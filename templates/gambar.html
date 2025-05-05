@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ image.title or image.filename }}</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/logo.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/favicon.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
@@ -66,7 +66,7 @@
                 </div>
                 <div>
                     <div class="flex gap-5">
-                        <a href="{{ url_for('phostel.download', image_id=image.id) }}" download class="flex item-center bg-biru-politik text-abu-indie p-2 rounded-md"><span class="material-symbols-outlined mr-2">download</span>Unduh</a>
+                        <a href="{{ url_for('phostel.download', image_id=image.id) }}" download class="active:bg-sky-900 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md"><span class="material-symbols-outlined mr-2">download</span>Unduh</a>
                         <button data-dropdown-toggle="share" class="cursor-pointer flex items-center text-abu-gelap"><span class="material-symbols-outlined">share</span></button>
                         <form method="POST" action="{{ url_for('phostel.like', image_id=image.id) }}" class="flex items-center text-abu-gelap">
                             <button type="submit" class="flex items-center">
@@ -77,6 +77,14 @@
                                 {% endif %}
                             </button>
                             <span>{{ like_count }}</span>
+                        </form>
+                        <form method="POST" action="{{ url_for('phostel.delete', image_id=image.id) }}" class="flex items-center text-abu-gelap">
+                            <button type="submit" class="flex items-center">
+                                {% if current_user.is_authenticated and image.user_id == current_user.id %}
+                                <span class="material-symbols-outlined mr-1 cursor-pointer text-merah-merona">delete</span> <!-- filled heart -->
+                                {% else %}
+                                {% endif %}
+                            </button>
                         </form>
                     </div>
                 </div>
