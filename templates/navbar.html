@@ -48,7 +48,7 @@
                                 </div>
                             <div>
                                 <p>{{ current_user.username }}</p>
-                                <p class="text-abu-gelap">{{ current_user.email }}</p>
+                                <p class="text-abu-gelap">{{ current_user.email[:2] }}**@**{{ current_user.email.split('@')[-1] }}</p>
                             </div>
                         </div>
                         <span class="material-symbols-outlined">chevron_right</span>
@@ -58,7 +58,7 @@
                     <li class="grid p-2 gap-1">
                         <a class="flex item-center hover:bg-sky-900 active:bg-sky-900 bg-biru-politik text-abu-indie p-2 rounded-md" href="{{ url_for('phostel.upload') }}"><span class="material-symbols-outlined mr-2">upload</span>Unggah</a>
                     {% if auth %}
-                        <a class="active:bg-rose-200 hover:bg-rose-200 flex item-center text-merah-merona p-2 rounded-md" href="{{ url_for('auth.logout') }}"><span class="material-symbols-outlined mr-2">logout</span>Keluar</a>
+                        <button data-modal-target="keluar" data-modal-toggle="keluar" class="cursor-pointer active:bg-rose-200 hover:bg-rose-200 flex item-center text-merah-merona p-2 rounded-md"><span class="material-symbols-outlined mr-2">logout</span>Keluar</button>
                     </li>
                     {% endif %}
                 </ul>
@@ -89,7 +89,7 @@
                     {% endif %}
                     <li class="grid p-2 gap-1">
                     {% if auth %}
-                        <a class="active:bg-rose-200 hover:bg-rose-200 flex item-center text-merah-merona p-2 rounded-md" href="{{ url_for('auth.logout') }}"><span class="material-symbols-outlined mr-2">logout</span>Keluar</a>
+                        <button data-modal-target="keluar" data-modal-toggle="keluar" class="cursor-pointer active:bg-rose-200 hover:bg-rose-200 flex item-center text-merah-merona p-2 rounded-md"><span class="material-symbols-outlined mr-2">logout</span>Keluar</button>
                     </li>
                     {% endif %}
                 </ul>
@@ -97,3 +97,22 @@
         </div>
     </div>
 </nav>
+
+<div id="keluar" tabindex="-1" class="bg-neutral-950/70 hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 min-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-abu-keputihan rounded-lg shadow-xl border-abu-gelap border-solid border">
+            <button type="button" class="p-1 rounded-md hover:bg-neutral-200 active:bg-neutral-300 absolute top-3 end-3 flex justify-center items-center" data-modal-hide="keluar">
+                <span class="material-symbols-outlined cursor-pointer text-abu-gelap">close</span>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 grid justify-items-center">
+                <img class="h-20 mb-5" src="{{ url_for('static', filename='assets/img/warning.jpg') }}" alt="">
+                <h3 class="mb-5 font-normal">Kamu ingin keluar??</h3>
+                <div class="flex gap-2">
+                    <a data-modal-hide="keluar" class="cursor-pointer bg-merah-merona hover:bg-red-400 active:bg-red-800 p-2 rounded-md flex items-center" href="{{ url_for('auth.logout') }}"><span class="material-symbols-outlined mr-1 text-abu-keputihan">logout</span><span class="text-abu-keputihan">Keluar</span></a>
+                    <button data-modal-hide="keluar" type="button" class="border-abu-gelap border-solid border text-abu-gelap hover:bg-neutral-200 active:bg-neutral-300 p-2 rounded-md flex items-center">Batalkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

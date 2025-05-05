@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, Response, Blueprint, request, flash
+from flask import Flask, render_template, url_for, redirect, Response, Blueprint, request, flash, render_template_string
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 import subprocess
 import uuid
 import time
+from functools import wraps
 from datetime import datetime
 import humanize
 from app import db
@@ -20,6 +21,21 @@ bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.init_app(auth)
 login_manager.login_view = "auth.signup"
+
+def anonymous_required(view_func):
+    @wraps(view_func)
+    def wrapped_view(*args, **kwargs):
+        if current_user.is_authenticated:
+            return render_template_string("""
+            <!doctype html>
+            <script>
+              const ref = document.referrer;
+              if (ref) location.href = ref;
+              else history.back();
+            </script>
+            """)
+        return view_func(*args, **kwargs)
+    return wrapped_view
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -53,6 +69,7 @@ class Login(FlaskForm):
     submit = SubmitField("Masuk", render_kw={"class": "bg-biru-politik text-abu-indie p-2 rounded-md active:bg-sky-900 hover:bg-sky-900"})
 
 @auth.route('/masuk', methods=['GET', 'POST'])
+@anonymous_required
 def login():
     form = Login()
 
@@ -76,6 +93,7 @@ def logout():
     return redirect(request.referrer or url_for('phostel.index'))
 
 @auth.route('/daftar', methods=['GET', 'POST'])
+@anonymous_required
 def signup():
     form = Register()
 

@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, render_template_string, send_from_directory, abort, Blueprint, current_app, abort
 import os
-from PIL import Image as PILImage
+from PIL import Image as PILImage, ExifTags
 import mimetypes
 from flask_login import login_required, current_user
 import sqlite3
@@ -171,6 +171,26 @@ def user_profile():
 
     return redirect(url_for('phostel.user', user_id=current_user.id))
 
+def apply_exif_orientation(image):
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+
+        exif = image._getexif()
+        if exif is not None:
+            orientation = exif.get(orientation)
+
+            if orientation == 3:
+                image = image.rotate(180, expand=True)
+            elif orientation == 6:
+                image = image.rotate(270, expand=True)
+            elif orientation == 8:
+                image = image.rotate(90, expand=True)
+    except Exception:
+        pass  # Some images might not have EXIF data
+    return image
+
 @phostel.route('/post', methods=['POST'])
 @login_required
 def post():
@@ -185,9 +205,12 @@ def post():
         # Open the image using Pillow (without saving to disk first)
         img = PILImage.open(file)
         img.verify()  # Verify the image without loading it into memory
+        file.seek(0)
 
         # Re-open the image because 'verify()' doesn't load it into memory
         img = PILImage.open(file)
+        img = apply_exif_orientation(img)
+        img = img.convert("RGB")
     except (IOError, SyntaxError) as e:
         return "File is not a valid image", 400
 
