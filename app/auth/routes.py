@@ -80,9 +80,9 @@ def login():
                 login_user(user, remember=True) # MASUK!
                 return redirect(url_for('phostel.index'))
             else:
-                return redirect(url_for('salah'))
+                return redirect(url_for('auth.login'))
         else:
-            return redirect(url_for('salah'))
+            return redirect(url_for('auth.login'))
 
     return render_template('login.html', form=form)
 

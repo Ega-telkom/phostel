@@ -2,99 +2,181 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <meta name="theme-color" content="#DADADA">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unggah ke Phostel</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/favicon.png') }}">
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <meta name="theme-color" content="#DADADA">
 </head>
 
 <body class="bg-abu-indie">
-    
-    {% include 'navbar.html' %}
 
-    <main class="mt-20 mx-auto max-w-7xl text-sm m-5 p-2">
+  {% include 'navbar-upload.html' %}
 
-      <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-10 mb-10">
-        <div>
-          <p class="text-hitam-pastel text-2xl mb-2">Unggah ke Phostel</p> <br>
+  <main class="mt-25 mx-auto max-w-7xl text-sm m-5 p-3">
+      <div>
+        <p class="text-hitam-pastel text-2xl mb-5">Unggah ke Phostel</p>
 
-          <form action="/post" method="POST" enctype="multipart/form-data">
-          <label for="title">Judul (Opsional): </label> <br>
-          <div class="flex w-full item-center border border-solid hover:border-biru-politik rounded-md p-2 text-sm">
-            <textarea type="text" rows="5" cols="20" name="title" id="title" placeholder="Judul yang unik" class="w-full border-none w-md focus:outline-none focus:ring-0 "></textarea>
+        <form class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 xl:gap-10 mb-10" action="/post" method="POST" enctype="multipart/form-data">
+          <div>
+            <div class="border-abu-gelap border-dashed border rounded-md p-2 grid justify-items-center">
+              <span class="material-symbols-outlined text-4xl! text-abu-gelap">upload_file</span>
+              <p class="text-abu-gelap">Tarik dan lepas ke sini gambarnya</p>
+              <input type="file" name="image" id="imageInput" accept="image/*"
+                class="p-2 mb-5 w-full h-20 mt-2 border-abu-gelap border-dashed border rounded-md hover:text-abu-gelap hover:border-biru-politik">
+              <img id="preview" style="max-width: 300px; display: none;" alt="Image preview">
+            </div>
+            <button
+            class="active:bg-sky-900 mt-5 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md"
+            type="submit"><span class="material-symbols-outlined mr-2 text-abu-indie">upload</span>Unggah</button>
           </div>
-          <br>
-          <div id="chipWrapper" class="flex-wrap flex gap-2">
-            <input type="text" class="border-abu-putih border p-1 px-2 rounded-md focus:outline-none focus:ring-0" id="tagInput" placeholder="Ketik tag lalu Enter...">
-          </div>
-          <input type="hidden" name="tag" id="hiddenTags">
-
-          <br><br>
-          <div class="border-abu-gelap border-dashed border rounded-md p-2">
-                <p>Tarik dan lepas ke sini gambarnya</p>
-              <input type="file" name="image" accept="image/*" class="p-2 mb-5 mt-2 border hover:text-abu-gelap hover:border-biru-politik">
-              <img class="h-32 object-cover" src="{{ url_for('static', filename='assets/img/upload.png') }}" alt="">
-              <button class="active:bg-sky-900 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md" type="submit">Unggah</button>
+          <div class="order-first md:order-last">
+            <div class="flex w-full item-center border-abu-gelap border border-solid hover:border-biru-politik rounded-md p-2 text-sm mb-5">
+              <textarea type="text" rows="5" cols="20" name="title" id="title" placeholder="Judul yang unik"
+                class="w-full border-none w-md focus:outline-none focus:ring-0 "></textarea>
+            </div>
+            <div id="chipWrapper" class="flex-wrap items-center flex gap-2 mb-5">
+              <input type="text"
+                class="border-abu-putih border w-32 border p-1 px-2 rounded-md focus:outline-none focus:ring-0"
+                id="tagInput" placeholder="Tambah tag...">
+              <span id="addTag" class="material-symbols-outlined cursor-pointer text-abu-gelap">add</span>
+            </div>
+            <input type="hidden" name="tag" id="hiddenTags">
           </div>
         </form>
-        </div>
-        <div class="flex items-center justify-center">
-          <img class="h-32 object-cover" src="{{ url_for('static', filename='assets/img/upload.png') }}" alt="">
-        </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    {% include 'footer.html' %}
+  {% include 'footer.html' %}
 
-    </body>
+</body>
 
-    <script>
-        const input = document.getElementById('tagInput');
-        const chipWrapper = document.getElementById('chipWrapper');
-        const hiddenTags = document.getElementById('hiddenTags');
-        const tags = new Set();
-      
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && input.value.trim() !== '') {
-            e.preventDefault();
-            addTag(input.value.trim());
-            input.value = '';
-          }
-        });
-      
-        function addTag(tag) {
-            if (tags.has(tag)) return;
-                tags.add(tag);
+<script>
+  const input = document.getElementById('tagInput');
+  const chipWrapper = document.getElementById('chipWrapper');
+  const hiddenTags = document.getElementById('hiddenTags');
+  const addTagButton = document.getElementById('addTag');
+  const tags = new Set();
 
-            const chip = document.createElement('span');
-            chip.className = "flex item-center border-abu-putih border p-1 px-2 rounded-md";
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && input.value.trim() !== '') {
+      e.preventDefault();
+      addTag(input.value.trim());
+      input.value = '';
+    }
+  });
 
-            const tagText = document.createElement('span');
-            tagText.textContent = tag;
+  addTagButton.addEventListener('click', () => {
+    if (input.value.trim() !== '') {
+      addTag(input.value.trim());
+      input.value = '';
+    }
+  });
 
-            const removeBtn = document.createElement('span');
-            removeBtn.textContent = 'close';
-            removeBtn.className = "material-symbols-outlined ml-2 text-abu-gelap cursor-pointer";
-            removeBtn.addEventListener('click', () => {
-                chip.remove();
-                tags.delete(tag);
-                updateHiddenInput();
-            });
+  addPlaceholderTag("Tambah tag");
 
-            chip.appendChild(tagText);
-            chip.appendChild(removeBtn);
-            chipWrapper.insertBefore(chip, input);
-            updateHiddenInput();
-        }
+  function addTag(tag) {
+    if (tags.has(tag)) return;
+    tags.add(tag);
 
-      
-        function updateHiddenInput() {
-          hiddenTags.value = Array.from(tags).join(';');
-        }
-      </script>
-      
+    const chip = document.createElement('span');
+    chip.className = "flex item-center border-abu-putih border p-1 px-2 rounded-md";
+
+    const tagText = document.createElement('span');
+    tagText.textContent = tag;
+
+    const removeBtn = document.createElement('span');
+    removeBtn.textContent = 'close';
+    removeBtn.className = "material-symbols-outlined ml-2 text-abu-gelap cursor-pointer";
+    removeBtn.addEventListener('click', () => {
+      chip.remove();
+      tags.delete(tag);
+      updateHiddenInput();
+    });
+
+    chip.appendChild(tagText);
+    chip.appendChild(removeBtn);
+    chipWrapper.insertBefore(chip, input);
+    updateHiddenInput();
+  }
+
+  function addPlaceholderTag(tag) {
+    const chip = document.createElement('span');
+    chip.className = "flex text-abu-gelap item-center border-abu-putih border p-1 px-2 rounded-md";
+
+    const tagText = document.createElement('span');
+    tagText.textContent = tag;
+
+    const removeBtn = document.createElement('span');
+    removeBtn.textContent = 'close';
+    removeBtn.className = "material-symbols-outlined ml-2 text-abu-gelap cursor-pointer";
+    removeBtn.addEventListener('click', () => chip.remove());
+
+    chip.appendChild(tagText);
+    chip.appendChild(removeBtn);
+    chipWrapper.insertBefore(chip, input);
+  }
+
+
+  function updateHiddenInput() {
+    hiddenTags.value = Array.from(tags).join(';');
+  }
+</script>
+
+<script>
+  const fileInput = document.getElementById('imageInput');
+  const preview = document.getElementById('preview');
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+</script>
+
+<script>
+  function triggerFileInput() {
+    document.getElementById('imageInput').click();
+  }
+
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+      document.getElementById('fileName').textContent = file.name;
+    }
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    const fileInput = document.getElementById('imageInput');
+    if (event.dataTransfer.files.length > 0) {
+      fileInput.files = event.dataTransfer.files;
+      fileInput.dispatchEvent(new Event('change'));
+    }
+    event.currentTarget.classList.remove('border-blue-500');
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault();
+    event.currentTarget.classList.add('border-blue-500');
+  }
+
+  function handleDragLeave(event) {
+    event.currentTarget.classList.remove('border-blue-500');
+  }
+</script>
+
 </html>

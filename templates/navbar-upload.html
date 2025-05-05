@@ -1,0 +1,98 @@
+<nav class="bg-abu-indie z-1 fixed w-full top-0 left-0 border-y border-solid border-abu-putih mb-10 p-4">
+    <div class="mx-auto max-w-7xl flex justify-between">
+        <div class="flex items-center md:flex-none grow">
+            <div class="mr-5">
+                <a href="{{ url_for('phostel.index') }}"><img class="h-4" src="{{ url_for('static', filename='assets/img/logo.png') }}" alt=""></a>
+            </div>
+            <div class="flex grow place-items-center border border-solid bg-abu-keputihan border-abu-putih rounded-md p-3 md:p-2 text-sm md:w-96">
+                <span class="material-symbols-outlined mr-2 text-abu-gelap">search</span>
+                <form action="{{ url_for('phostel.search') }}" method="get" class="w-full">
+                    <input type="text" name="q" id="" placeholder="Telusuri" class="focus:outline-none focus:ring-0 w-full" value="{{ query or '' }}">
+                </form>
+            </div>
+        </div>
+        <div class="text-sm flex items-center">
+            <div id="nav-actions" class="hidden md:flex">
+                {% if auth %}
+                <button data-dropdown-toggle="dropdown-small" type="button" class="hidden md:flex cursor-pointer item-center text-sm ml-5">
+                    {% if current_user.picture %}
+                    <img src="{{ url_for('static', filename=current_user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
+                    {% else %}
+                    <div class="mr-2 w-10 h-10 object-cover rounded-full bg-neutral-400 active:bg-neutral-500 hover:bg-neutral-500 text-neutral-100 flex items-center justify-center select-none">
+                        {{ current_user.username[0:1]|upper }}
+                    </div>
+                    {% endif %}                    
+                </button>
+                {% endif %}
+            </div>
+
+            <button data-dropdown-toggle="dropdown" type="button" class="md:hidden cursor-pointer item-center text-sm ml-5 md:ml-2">
+                <span class="material-symbols-outlined text-2xl!">menu</span>
+            </button>
+
+            <div id="dropdown" class="z-10 hidden bg-abu-keputihan border-abu-putih border-solid border rounded-lg overflow-hidden shadow-lg w-72">
+                <ul class="text-sm gap-3 divide-abu-putih divide-y" aria-labelledby="dropdownDefaultButton">
+                    {% if auth %}
+                    <li class="p-2 active:bg-neutral-300 hover:bg-neutral-300">
+                        <a href="{{ url_for('phostel.user', user_id=current_user.id) }}" class="flex place-items-center justify-between">
+                            <div class="flex place-items-center">
+                                <div> 
+                                    {% if current_user.picture %}
+                                    <img src="{{ url_for('static', filename=current_user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
+                                    {% else %}
+                                    <div class="mr-2 w-10 h-10 object-cover rounded-full bg-neutral-400 active:bg-neutral-500 hover:bg-neutral-500 text-neutral-100 flex items-center justify-center select-none">
+                                        {{ current_user.username[0:1]|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            <div>
+                                <p>{{ current_user.username }}</p>
+                                <p class="text-abu-gelap">{{ current_user.email }}</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="grid p-2 gap-1">
+                        <a class="flex item-center hover:bg-sky-900 active:bg-sky-900 bg-biru-politik text-abu-indie p-2 rounded-md" href="{{ url_for('phostel.upload') }}"><span class="material-symbols-outlined mr-2">upload</span>Unggah</a>
+                    {% if auth %}
+                        <a class="active:bg-rose-200 hover:bg-rose-200 flex item-center text-merah-merona p-2 rounded-md" href="{{ url_for('auth.logout') }}"><span class="material-symbols-outlined mr-2">logout</span>Keluar</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div id="dropdown-small" class="z-10 m-5 hidden bg-abu-keputihan border-abu-putih border-solid border overflow-hidden rounded-lg shadow-lg w-64">
+                <ul class="text-sm gap-3 divide-abu-putih divide-y " aria-labelledby="dropdownDefaultButton">
+                    {% if auth %}
+                    <li class="p-2 active:bg-neutral-300 hover:bg-neutral-300">
+                        <a href="{{ url_for('phostel.user', user_id=current_user.id) }}" class="flex place-items-center justify-between">
+                            <div class="flex place-items-center">
+                                <div>
+                                    {% if current_user.picture %}
+                                    <img src="{{ url_for('static', filename=current_user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
+                                    {% else %}
+                                    <div class="mr-2 w-10 h-10 object-cover rounded-full bg-neutral-400 active:bg-neutral-500 hover:bg-neutral-500 text-neutral-100 flex items-center justify-center select-none">
+                                        {{ current_user.username[0:1]|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            <div>
+                                <p>{{ current_user.username }}</p>
+                                <p class="text-abu-gelap">{{ current_user.email[:2] }}**@**{{ current_user.email.split('@')[-1] }}</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="grid p-2 gap-1">
+                    {% if auth %}
+                        <a class="active:bg-rose-200 hover:bg-rose-200 flex item-center text-merah-merona p-2 rounded-md" href="{{ url_for('auth.logout') }}"><span class="material-symbols-outlined mr-2">logout</span>Keluar</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
