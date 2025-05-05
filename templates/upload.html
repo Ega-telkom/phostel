@@ -17,27 +17,35 @@
     {% include 'navbar.html' %}
 
     <main class="mt-20 mx-auto max-w-7xl text-sm m-5">
-        
-        <p class="text-hitam-pastel text-2xl mb-2">Unggah ke Phostel</p> <br>
 
-        <form action="/post" method="POST" enctype="multipart/form-data">
+      <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-10 mb-10">
+        <div>
+          <p class="text-hitam-pastel text-2xl mb-2">Unggah ke Phostel</p> <br>
+
+          <form action="/post" method="POST" enctype="multipart/form-data">
           <label for="title">Judul (Opsional): </label> <br>
-        <div class="flex md:w-96 item-center border border-solid hover:border-biru-politik rounded-md p-2 text-sm">
-            <textarea type="text" rows="5" cols="20" name="title" id="title" placeholder="Judul yang unik" class="border-none w-md focus:outline-none focus:ring-0 "></textarea>
-        </div>
-        <br>
-        <div id="chipWrapper" class="flex-wrap flex gap-2">
+          <div class="flex w-full item-center border border-solid hover:border-biru-politik rounded-md p-2 text-sm">
+            <textarea type="text" rows="5" cols="20" name="title" id="title" placeholder="Judul yang unik" class="w-full border-none w-md focus:outline-none focus:ring-0 "></textarea>
+          </div>
+          <br>
+          <div id="chipWrapper" class="flex-wrap flex gap-2">
             <input type="text" class="border-abu-putih border p-1 px-2 rounded-md focus:outline-none focus:ring-0" id="tagInput" placeholder="Ketik tag lalu Enter...">
-        </div>
-        <input type="hidden" name="tag" id="hiddenTags">
+          </div>
+          <input type="hidden" name="tag" id="hiddenTags">
 
           <br><br>
-          <div style="border: dashed 1px; padding: 5px">
+          <div class="border-abu-gelap border-dashed border rounded-md p-2">
                 <p>Tarik dan lepas ke sini gambarnya</p>
               <input type="file" name="image" accept="image/*" class="p-2 mb-5 mt-2 border hover:text-abu-gelap hover:border-biru-politik">
-              <button class="flex item-center bg-biru-politik text-abu-indie p-2 rounded-md" type="submit">Unggah</button>
+              <img class="h-32 object-cover" src="{{ url_for('static', filename='assets/img/upload.png') }}" alt="">
+              <button class="active:bg-sky-900 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md" type="submit">Unggah</button>
           </div>
         </form>
+        </div>
+        <div class="flex items-center justify-center">
+          <img class="h-32 object-cover" src="{{ url_for('static', filename='assets/img/upload.png') }}" alt="">
+        </div>
+      </div>
     </main>
 
     {% include 'footer.html' %}

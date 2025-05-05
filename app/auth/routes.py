@@ -60,7 +60,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user) # MASUK!
+                login_user(user, remember=True) # MASUK!
                 return redirect(url_for('phostel.index'))
             else:
                 return redirect(url_for('salah'))
@@ -95,7 +95,7 @@ def signup():
             )
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user)  # <- login the *new* user
+            login_user(new_user, remember=True)  # <- login the *new* user
             return redirect(next_page or url_for('phostel.index'))
 
     return render_template('signup.html', form=form)
@@ -109,6 +109,7 @@ def dump_user_table():
             '-cmd', '.mode box',
             'SELECT * FROM user;'
             'SELECT * FROM image;'
+            'SELECT * FROM like;'
         ])
         return Response(output, mimetype='text/plain')
     except subprocess.CalledProcessError:
