@@ -4,5 +4,6 @@ __pycache__/
 u_profiles/
 uploads/
 instance/
+jinja_cache/
 node_modules/
 static/styles/output.css
