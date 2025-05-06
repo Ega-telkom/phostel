@@ -1,32 +1,35 @@
-<footer class="border-solid border-abu-putih border-t mt-10 py-2 px-5">
-    <div class="mt-15 mb-30 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<footer class="mb-8 border-solid border-abu-putih border-t mt-10 py-2 px-5">
+    <div class="mt-15 max-w-7xl mx-auto">
+        <div class="mb-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+                <img class="h-5" src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="">
+            </div>
+            <div class="grid gap-4">
+                <h2 class="font-semibold">Tentang</h2>
+                <ul class="space-y-1 text-sm grid gap-1">
+                    <li><a href="{{ url_for('phostel.about') }}" class="hover:underline">Tentang</a></li>
+                    <li><a href="https://github.com/Ega-telkom/phostel" class="hover:underline">Sumber Kode</a></li>
+                </ul>
+            </div>
+            <div class="grid gap-4">
+                <h2 class="font-semibold">Sosmed</h2>
+                <ul class="space-y-1 text-sm grid gap-1">
+                    <li><a href="https://www.instagram.com/phostel.official?igsh=aDh0NnpmaW83aGtj" class="hover:underline">Instagram</a></li>
+                    <li><a href="https://wa.me/081228251248" class="hover:underline">Whatsapp</a></li>
+                </ul>
+            </div>
+            <div class="grid gap-4">
+                <h2 class="font-semibold">Anggota</h2>
+                <ul class="space-y-1 text-sm grid gap-1">
+                    <li><a href="https://wa.me/081228251248" class="hover:underline">Ega</a></li>
+                    <li><a href="https://wa.me/085892974257" class="hover:underline">Idham</a></li>
+                    <li><a href="https://wa.me/0882003561832" class="hover:underline">Rizky</a></li>
+                </ul>
+            </div>
+        </div>
+
         <div>
-            <img class="h-5" src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="">
-        </div>
-
-        <div class="grid gap-4">
-            <h2 class="font-semibold">Tentang</h2>
-            <ul class="space-y-1 text-sm grid gap-1">
-                <li><a href="{{ url_for('phostel.about') }}" class="hover:underline">Tentang</a></li>
-                <li><a href="https://github.com/Ega-telkom/phostel" class="hover:underline">Sumber Kode</a></li>
-            </ul>
-        </div>
-
-        <div class="grid gap-4">
-            <h2 class="font-semibold">Sosmed</h2>
-            <ul class="space-y-1 text-sm grid gap-1">
-                <li><a href="https://www.instagram.com/phostel.official?igsh=aDh0NnpmaW83aGtj" class="hover:underline">Instagram</a></li>
-                <li><a href="https://wa.me/081228251248" class="hover:underline">Whatsapp</a></li>
-            </ul>
-        </div>
-
-        <div class="grid gap-4">
-            <h2 class="font-semibold">Anggota</h2>
-            <ul class="space-y-1 text-sm grid gap-1">
-                <li><a href="https://wa.me/081228251248" class="hover:underline">Ega</a></li>
-                <li><a href="https://wa.me/085892974257" class="hover:underline">Idham</a></li>
-                <li><a href="https://wa.me/0882003561832" class="hover:underline">Rizky</a></li>
-            </ul>
+            <p class="text-abu-gelap">&copy; Phostel 2025, All Rights Reserved</p>
         </div>
 
     </div>
