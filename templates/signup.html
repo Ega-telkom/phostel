@@ -35,7 +35,7 @@
                                 {{ form.username }}
                             </div>
                             <div>
-                                <label for="username">Email</label>
+                                <label for="Email">Email</label>
                                 {{ form.email }}
                                 {% with messages = get_flashed_messages(category_filter=['email']) %}
                                 {% if messages %}
@@ -48,8 +48,13 @@
                                 {% endwith %}
                             </div>
                             <div>
-                                <label for="username">Password</label>
-                                {{ form.password }}
+                                <label for="Password">Password</label>
+                                <div class="flex items-center w-full item-center border border-solid border-abu-putih rounded-md p-2 text-sm">
+                                    {{ form.password }}
+                                    <button type="button" class="flex items-center ml-2" onclick="togglePass()" id="toggleBtn">
+                                        <span id="passIcon" class="material-symbols-outlined text-abu-gelap">visibility</span>
+                                    </button>
+                                </div>  
                             </div>
                             <div class="grid">
                                 {{ form.submit }}
@@ -69,4 +74,20 @@
     {% include 'footer.html' %}
     
 </body>
+
+<script>
+    function togglePass() {
+    const x = document.getElementById("password");
+    const icon = document.getElementById("passIcon");
+
+    if (x.type === "password") {
+        x.type = "text";
+        icon.textContent = "visibility_off"; // eye-off icon
+    } else {
+        x.type = "password";
+        icon.textContent = "visibility"; // eye icon
+    }
+    }
+</script>
+
 </html>

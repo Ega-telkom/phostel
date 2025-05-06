@@ -17,9 +17,9 @@
                 {% if auth %}
                 <button data-dropdown-toggle="dropdown-small" type="button" class="hidden md:flex cursor-pointer item-center text-sm ml-5">
                     {% if current_user.picture %}
-                    <img src="{{ url_for('static', filename=current_user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
+                    <img src="{{ url_for('static', filename=current_user.picture) }}" alt="Profile Picture" class="mr-2 w-9 h-9 object-cover rounded-full active:brightness-70 hover:brightness-70">
                     {% else %}
-                    <div class="mr-2 w-10 h-10 object-cover rounded-full bg-neutral-400 active:bg-neutral-500 hover:bg-neutral-500 text-neutral-100 flex items-center justify-center select-none">
+                    <div class="mr-2 w-9 h-9 object-cover rounded-full bg-neutral-400 active:bg-neutral-500 hover:bg-neutral-500 text-neutral-100 flex items-center justify-center select-none">
                         {{ current_user.username[0:1]|upper }}
                     </div>
                     {% endif %}                    

@@ -57,16 +57,16 @@ def load_user(user_id):
 
 class Register(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=2, max=20)], render_kw={"class": "w-full item-center border border-solid border-abu-putih rounded-md p-2 text-sm"})
-    password = PasswordField(validators=[InputRequired(), Length(min=4, max=80)], render_kw={"class": "w-full item-center border border-solid border-abu-putih rounded-md p-2 text-sm"})
+    password = PasswordField(validators=[InputRequired(), Length(min=4, max=80)], render_kw={"class": "focus:outline-none focus:ring-0 w-full", "id": "password"})
     email = EmailField('Email', validators=[DataRequired(), Email()], render_kw={"class": "w-full item-center border border-solid border-abu-putih rounded-md p-2 text-sm"})
-    submit = SubmitField("Lanjut", render_kw={"class": "bg-biru-politik text-abu-indie p-2 rounded-md active:bg-sky-900 hover:bg-sky-900"})
+    submit = SubmitField("Lanjut", render_kw={"class": "active:bg-sky-900 hover:bg-sky-600 bg-biru-politik text-abu-indie p-2 rounded-md active:bg-sky-900 hover:bg-sky-900"})
 
 
 class Login(FlaskForm):
-    password = PasswordField(validators=[InputRequired(), Length(min=4, max=80)], render_kw={"class": "w-full item-center border border-solid border-abu-putih rounded-md p-2 text-sm"})
+    password = PasswordField(validators=[InputRequired(), Length(min=4, max=80)], render_kw={"class": "focus:outline-none focus:ring-0 w-full", "id": "password"})
     email = EmailField('Email', validators=[DataRequired(), Email()], render_kw={"class": "w-full item-center border border-solid border-abu-putih rounded-md p-2 text-sm"})
 
-    submit = SubmitField("Masuk", render_kw={"class": "bg-biru-politik text-abu-indie p-2 rounded-md active:bg-sky-900 hover:bg-sky-900"})
+    submit = SubmitField("Masuk", render_kw={"class": "active:bg-sky-900 hover:bg-sky-600 bg-biru-politik text-abu-indie p-2 rounded-md active:bg-sky-900 hover:bg-sky-900"})
 
 @auth.route('/masuk', methods=['GET', 'POST'])
 @anonymous_required
