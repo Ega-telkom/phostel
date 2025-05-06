@@ -160,10 +160,24 @@ def user_profile():
     os.makedirs(upload_dir, exist_ok=True)  # Ensure the folder exists
 
     # Save file using the absolute path
+
+    try:
+        # Open the image using Pillow (without saving to disk first)
+        img = PILImage.open(file)
+        img.verify()  # Verify the image without loading it into memory
+        file.seek(0)
+
+        # Re-open the image because 'verify()' doesn't load it into memory
+        img = PILImage.open(file)
+        img = apply_exif_orientation(img)
+        img = img.convert("RGB")
+    except (IOError, SyntaxError) as e:
+        return "File is not a valid image", 400
+
     save_path = os.path.join(upload_dir, unique_name)
     print("Saving to:", save_path)  # Debugging step to check where it saves
 
-    file.save(save_path)
+    img.save(save_path, format="JPEG", quality=45, optimize=True)
 
     # Store the relative path in DB
     current_user.picture = f"u_profiles/{unique_name}"
@@ -227,7 +241,7 @@ def post():
 
     # Save file
     file_path = os.path.join(upload_folder, unique_filename)
-    img.save(file_path, format="JPEG", quality=80, optimize=True)
+    img.save(file_path, format="JPEG", quality=70, optimize=True)
 
     # Save metadata to DB
     new_image = Image(

@@ -118,7 +118,7 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-@auth.route('/dump')
+@auth.route('/admin')
 def dump_user_table():
     try:
         # Run sqlite3 and execute commands
