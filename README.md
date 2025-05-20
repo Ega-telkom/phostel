@@ -24,3 +24,8 @@ Untuk memasang keperluan-keperluan website
 ```
 pip install -r requirements.txt
 ```
+
+Terakhir, menjalankan websitenya. Berada di port `5500`
+```
+python app.py
+```

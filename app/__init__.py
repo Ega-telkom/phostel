@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
-from jinja2 import FileSystemBytecodeCache
+# from jinja2 import FileSystemBytecodeCache
 import humanize
 
 # Initialize the db object
@@ -24,15 +24,14 @@ def create_app():
     os.makedirs(profile_folder, exist_ok=True)
     app.config['UPLOAD_FOLDER'] = upload_folder
 
-    cache_dir = os.path.join(os.getcwd(), 'jinja_cache')
-    os.makedirs(cache_dir, exist_ok=True)
-    app.jinja_env.bytecode_cache = FileSystemBytecodeCache(cache_dir)
+    # cache_dir = os.path.join(os.getcwd(), 'jinja_cache')
+    # os.makedirs(cache_dir, exist_ok=True)
+    # app.jinja_env.bytecode_cache = FileSystemBytecodeCache(cache_dir)
 
     # App configuration for SQLAlchemy
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    app.config['SECRET_KEY'] = '6Le6vywrAAAAACxkVGuCs9q5QzBFx4ra3Vuda2_w'
+    app.config['SECRET_KEY'] = '123123'
     
     db.init_app(app)
     

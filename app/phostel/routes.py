@@ -7,7 +7,7 @@ import sqlite3
 from werkzeug.utils import secure_filename
 import uuid
 from sqlalchemy import Column, String, ForeignKey, or_, and_
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, joinedload
 import uuid
 from app import db
 import time
@@ -48,13 +48,20 @@ class Like(db.Model):
 
 @phostel.route('/')
 def index():
-    image = Image.query.order_by(Image.upload_date.desc()).all()
-    images = [{'id': img.id, 'filename': img.filename, 'title': img.title} for img in image]
+    page = 1
+    per_page = 3
+    images = Image.query.options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
 
     auth = current_user.is_authenticated
     
-    # bangun html untuk menampilkan gambar
-    return render_template('index.html', images=images, auth=auth, current_user=current_user)
+    return render_template('index.html', images=images.items, page=page, has_next=images.has_next, user=user, auth=auth, current_user=current_user)
+
+@phostel.route('/load')
+def load():
+    page = request.args.get('page', 1, type=int)
+    per_page = 3
+    images = Image.query.order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+    return render_template('_memuat.html', images=images.items, page=page, has_next=images.has_next)
 
 @phostel.route('/upload')
 @login_required
@@ -177,6 +184,8 @@ def user_profile():
     save_path = os.path.join(upload_dir, unique_name)
     print("Saving to:", save_path)  # Debugging step to check where it saves
 
+    max_size = (256, 256)  # Max width and height
+    img.thumbnail(max_size)
     img.save(save_path, format="JPEG", quality=45, optimize=True)
 
     # Store the relative path in DB
@@ -233,22 +242,35 @@ def post():
 
     # Sanitize and generate a unique filename
     ext = os.path.splitext(secure_filename(file.filename))[1]
-    unique_filename = f"{uuid.uuid4().hex}{ext}"
+    image_uuid = uuid.uuid4().hex
+    original_filename = f"{image_uuid}{ext}"
+    thumbnail_filename = f"{image_uuid}{ext}"
 
     # Ensure upload folder exists
     upload_folder = current_app.config['UPLOAD_FOLDER']
     os.makedirs(upload_folder, exist_ok=True)
 
     # Save file
-    file_path = os.path.join(upload_folder, unique_filename)
+    file_path = os.path.join(upload_folder, original_filename)
     img.save(file_path, format="JPEG", quality=70, optimize=True)
+
+    # Thumbnails
+    thumb_size = (512, 512)  # Adjust size as needed
+    thumb = img.copy()
+    thumb.thumbnail(thumb_size)
+
+    thumb_folder = os.path.join(upload_folder, "thumbnails")
+    os.makedirs(thumb_folder, exist_ok=True)
+
+    thumb_path = os.path.join(thumb_folder, thumbnail_filename)
+    thumb.save(thumb_path, format="JPEG", quality=60, optimize=True)
 
     # Save metadata to DB
     new_image = Image(
         id=str(uuid.uuid4()),
-        filename=unique_filename,
+        filename=original_filename,
         title=title,
-        filepath=os.path.join("uploads", unique_filename),
+        filepath=os.path.join("uploads", original_filename),
         tag=tag,
         user=current_user
     )
@@ -304,7 +326,7 @@ def delete(image_id):
         abort(404, description="Image not found")
 
     # Check if the current user owns the image
-    if image.user_id != current_user.id:
+    if image.user_id != current_user.id and current_user.admin != 1:
         abort(403, description="You are not authorized to delete this image")
 
     # Optionally delete the image file from disk

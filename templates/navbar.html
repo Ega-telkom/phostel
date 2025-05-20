@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="text-sm flex items-center">
-            <div id="nav-actions" class="hidden md:flex">
+            <div id="nav-actions" class="hidden md:flex items-center">
                 <a class="flex item-center active:bg-sky-900 hover:bg-sky-600 bg-biru-politik text-abu-indie p-2 rounded-md" href="{{ url_for('phostel.upload') }}"><span class="material-symbols-outlined mr-2">upload</span>Unggah</a>
                 {% if auth %}
                 <button data-dropdown-toggle="dropdown-small" type="button" class="hidden md:flex cursor-pointer item-center text-sm ml-5">
@@ -24,6 +24,9 @@
                     </div>
                     {% endif %}                    
                 </button>
+                {% if current_user.admin %}
+                <span class="material-symbols-outlined text-biru-politik pointer-events-none select-none" alt="Admin Phostel">local_police</span>
+                {% endif %}
                 {% endif %}
             </div>
 
@@ -47,7 +50,11 @@
                                     {% endif %}
                                 </div>
                             <div>
-                                <p>{{ current_user.username }}</p>
+                                <p>{{ current_user.username }}
+                                    {% if current_user.admin %}
+                                    <span class="text-biru-politik" alt="Admin Phostel">[A]</span>
+                                    {% endif %}
+                                </p>
                                 <p class="text-abu-gelap">{{ current_user.email[:2] }}**@**{{ current_user.email.split('@')[-1] }}</p>
                             </div>
                         </div>
@@ -79,7 +86,11 @@
                                     {% endif %}
                                 </div>
                             <div>
-                                <p>{{ current_user.username }}</p>
+                                <p>{{ current_user.username }}
+                                    {% if current_user.admin %}
+                                    <span class="text-biru-politik" alt="Admin Phostel">[A]</span>
+                                    {% endif %}
+                                </p>
                                 <p class="text-abu-gelap">{{ current_user.email[:2] }}**@**{{ current_user.email.split('@')[-1] }}</p>
                             </div>
                         </div>

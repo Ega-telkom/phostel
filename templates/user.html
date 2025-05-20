@@ -40,8 +40,11 @@
                     {% endif %}
                 </div>
                 <div>
-                    <div class="flex item-center">
-                        <p class="text-xl mb-2"><span class="text-abu-gelap text-wrap"></span>{{ user.username }}</p>
+                    <div class="flex items-center mb-2 gap-1">
+                        <p class="text-xl"><span class="text-abu-gelap text-wrap"></span>{{ user.username }}</p>
+                        {% if user.admin %}
+                        <span class="material-symbols-outlined text-biru-politik pointer-events-none select-none" alt="Admin Phostel">local_police</span>
+                        {% endif %}
                     </div>
                     <p>{{ upload_count }} Unggahan</p>
                     <p><span class="text-abu-gelap">Bergabung sejak</span> {{ humanized_time }}</p>
@@ -57,7 +60,7 @@
                     {% for image in images %}
                     <div class="box">
                         <a href="{{ url_for('phostel.images', item_id=image.id) }}">
-                        <img class="gallery" loading="lazy" src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.title or image.filename }}" width="200" href>
+                        <img class="gallery" loading="lazy" src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}" alt="{{ image.title or image.filename }}" width="200" href>
                         </a>
                     </div>
                     {% endfor %}
