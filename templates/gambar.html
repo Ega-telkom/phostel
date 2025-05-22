@@ -52,7 +52,7 @@
                         <div>
                             <p class="text-sm"><span class="text-abu-gelap"></span>{{ image.user.username }}
                                 {% if user.admin %}
-                                <span class="text-biru-politik" alt="Admin Phostel">[A]</span>
+                                <span class="text-biru-politik" title="Admin Phostel">[A]</span>
                                 {% endif %}
                             </p>
                             <p class="text-sm text-abu-gelap mb-2">Diunggah {{ humanized_time }}</p>
@@ -92,13 +92,13 @@
                 <p class="text-xl mt-4 mb-2">Unggahan lain oleh {{ image.user.username }}</p>
                 {% endif %}
                 <div class="column">
-                    {% for image in images %}
+                    <!-- {% for image in images %}
                     <div class="box">
                         <a href="{{ url_for('phostel.images', item_id=image.id) }}">
                             <img class="gallery" loading="lazy" src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}" alt="{{ image.title or image.filename }}" width="200" href>
                         </a>
                     </div>
-                    {% endfor %}
+                    {% endfor %} -->
                 </div>
             </div>
         </div>
