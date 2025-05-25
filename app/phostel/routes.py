@@ -56,12 +56,12 @@ def dimen(filename):
 @phostel.route('/')
 def index():
     page = 1
-    per_page = 3
+    per_page = 6
     images = Image.query.options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
 
     auth = current_user.is_authenticated
     
-    return render_template('index.html', images=images.items, page=page, has_next=images.has_next, user=user, auth=auth, current_user=current_user)
+    return render_template('index.html', images=images.items, page=page, has_next=images.has_next, auth=auth, current_user=current_user)
 
 @phostel.route('/load')
 def load():

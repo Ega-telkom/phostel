@@ -31,9 +31,26 @@
         </ul>
     </div>
 
-    <main class="lg:mt-18 mt-20 mx-auto max-w-7xl text-sm m-5 p-3">
-        <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-10 mb-10">
-            <div id="gallery" class="bg-neutral-400 rounded-md overflow-hidden">
+    <main class="mt-20 mx-auto max-w-7xl text-sm m-5 md:p-3">
+        <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-2 xl:gap-10 mb-10">
+            <a class="flex md:hidden pt-4 px-2" href="{{ url_for('phostel.user', user_id=image.user_id) }}">
+                {% if user.picture %}
+                <img src="{{ url_for('static', filename=user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
+                {% else %}
+                <div class="mr-2 w-10 h-10 object-cover rounded-full bg-neutral-400 text-neutral-100 flex items-center justify-center select-none">
+                    {{ user.username[0:1]|upper }}
+                </div>
+                {% endif %}                        
+                <div>
+                    <p class="text-sm"><span class="text-abu-gelap"></span>{{ image.user.username }}
+                        {% if user.admin %}
+                        <span class="text-biru-politik" title="Admin Phostel">[A]</span>
+                        {% endif %}
+                    </p>
+                    <p class="text-sm text-abu-gelap mb-2">Diunggah {{ humanized_time }}</p>
+                </div>
+            </a>
+            <div id="gallery" class="bg-neutral-400 md:rounded-md overflow-hidden">
                 <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}" data-pswp-width="{{ dimen.width }}" data-pswp-height="{{ dimen.height }}">
                     <img
                     src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
@@ -45,10 +62,10 @@
                     >
                 </a>
             </div>
-            <div class="flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)] no-scrollbar">
+            <div class="flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)] no-scrollbar px-3">
                 <div class="grid gap-3">
-                    <p class="text-xl">{{ image.title or image.filename }}</p>
-                    <a class="flex" href="{{ url_for('phostel.user', user_id=image.user_id) }}">
+                    <p class="text-xl truncate">{{ image.title or image.filename }}</p>
+                    <a class="md:flex hidden" href="{{ url_for('phostel.user', user_id=image.user_id) }}">
                         {% if user.picture %}
                         <img src="{{ url_for('static', filename=user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
                         {% else %}

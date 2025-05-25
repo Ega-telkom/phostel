@@ -1,17 +1,49 @@
 {% for image in images %}
     <div class="box max-w-full overflow-hidden">
-        <a href="{{ url_for('phostel.images', item_id=image.id) }}">
-            <div class="rounded-md overflow-hidden">
-                <img
-                    src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
-                    class="gallery"
-                    data-src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}"
-                    loading="eager"
-                    style="aspect-ratio: {{ image.width }} / {{ image.height }};"
-                    alt="{{ image.title or image.filename }}"
-                >
+            <div class="md:hidden pt-2 mb-2 flex px-2 items-center">
+                <div>
+                    {% if image.user.picture %}
+                    <img src="{{ url_for('static', filename=image.user.picture) }}" alt="Profile Picture" class="mr-2 w-10 h-10 object-cover rounded-full active:brightness-70 hover:brightness-70">
+                    {% else %}
+                    <div class="mr-2 w-10 h-10 object-cover rounded-full bg-neutral-400 text-neutral-100 flex items-center justify-center select-none">
+                        {{ image.user.username[0:1]|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="text-base text-hitam-pastel truncate">{{ image.user.username }}</p>
+                </div>
             </div>
-        </a>
+            <a href="{{ url_for('phostel.images', item_id=image.id) }}">
+                <div class="md:rounded-md overflow-hidden">
+                    <img
+                        src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
+                        class="gallery bg-neutral-400"
+                        data-src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}"
+                        loading="eager"
+                        style="aspect-ratio: {{ image.width }} / {{ image.height }};"
+                        alt="{{ image.title or image.filename }}"
+                    >
+                </div>
+            </a>
+            <div class="md:hidden flex mb-10 mt-3 px-2 border-solid gap-3">
+                <a href="{{ url_for('phostel.download', image_id=image.id) }}" download class="active:bg-sky-900 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md text-sm"><span class="material-symbols-outlined mr-2">download</span>Unduh</a>
+                <button data-dropdown-toggle="share" class="cursor-pointer flex items-center text-abu-gelap"><span class="material-symbols-outlined">share</span></button>
+                <form method="POST" action="{{ url_for('phostel.like', image_id=image.id) }}" class="flex items-center text-abu-gelap">
+                    <button type="submit" class="flex items-center">
+                        {% if current_user.is_authenticated and liked %}
+                        <span style="font-variation-settings: 'FILL' 1" class="material-symbols-outlined mr-1 cursor-pointer text-merah-merona">favorite</span> <!-- filled heart -->
+                        {% else %}
+                        <span class="material-symbols-outlined mr-1 cursor-pointer">favorite</span> <!-- empty heart -->
+                        {% endif %}
+                    </button>
+                    <span>{{ like_count }}</span>
+                </form>
+                {% if current_user.is_authenticated and (image.user_id == current_user.id or current_user.admin) %}
+                <button data-modal-target="hapus" class="cursor-pointer flex items-center text-abu-gelap" data-modal-toggle="hapus" type="button"><span class="material-symbols-outlined">delete</span></button>
+                {% else %}
+                {% endif %}
+            </div>
     </div>
 {% endfor %}
 

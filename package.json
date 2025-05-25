@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "serve": "gunicorn wsgi:app --workers 4 --threads 4",
     "build:css": "npx tailwindcss -i ./static/styles/input.css -o ./static/styles/output.css --watch --minify"
   },
   "devDependencies": {

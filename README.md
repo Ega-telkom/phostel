@@ -3,7 +3,7 @@
 Sebuah Website repositori gambar dinamis yang memiliki performa yang sangat lambat.
 
 ## Reproduksi
-Anda harus membuat lingkungan terisolasi. Package yang diperlukan untuk sistem anda ialah `python` dan `pip`.
+Anda harus membuat lingkungan terisolasi. Package yang diperlukan untuk sistem anda ialah `python`,`pip`, dan `nodejs`.
 
 Berikut Caranya membuat lingkungan yang terisolasi.
 ```
@@ -25,7 +25,12 @@ Untuk memasang keperluan-keperluan website
 pip install -r requirements.txt
 ```
 
-Terakhir, menjalankan websitenya. Berada di port `5500`
+Untuk menjalankan website dalam mode awakutu. Berada di port `5500`
 ```
 python app.py
+```
+
+Untuk menjalankan website. Berada di port `8000`
+```
+npm run serve
 ```
