@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
     <script src="{{ url_for('static', filename='scripts/script.js') }}" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=chevron_right,local_police,logout,menu,progress_activity,search,upload" rel="stylesheet"/>    
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
@@ -26,10 +26,49 @@
         <div class="column" id="image-container">
             {% include "_memuat.html" %}
         </div>
+        <div id="loading-indicator" class="flex justify-center mt-4" style="display:none;">
+            <span class="loading material-symbols-outlined text-abu-gelap text-4xl!">progress_activity</span>
+        </div>
     </main>
 
     {% include 'footer.html' %}
 
 </body>  
+
+<script>
+document.body.addEventListener('htmx:beforeRequest', function(evt) {
+  // Show loading indicator when htmx triggers a request from your trigger div
+  if (evt.target.classList.contains('load-trigger')) {
+    document.getElementById('loading-indicator').style.display = 'flex';
+  }
+});
+
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+  // Hide loading indicator after content swap if triggered by your load-trigger
+  if (evt.target.classList.contains('load-trigger')) {
+    document.getElementById('loading-indicator').style.display = 'none';
+  }
+});
+
+</script>
+
+<script>
+    function init() {
+        var imgDefer = document.getElementsByClassName('gallery');
+        for (var i = 0; i < imgDefer.length; i++) {
+            if (imgDefer[i].getAttribute('data-src') && !imgDefer[i].classList.contains('loaded')) {
+                imgDefer[i].onload = function () {
+                    this.classList.add('loaded');
+                };
+                imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
+            }
+        }
+    }
+    window.onload = init;
+
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        init();
+    });
+</script>
 
 </html>

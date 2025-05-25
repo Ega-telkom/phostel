@@ -27,6 +27,8 @@ class Image(db.Model):
     tag = db.Column(db.String)
     like = db.Column(db.Integer, default=0)
     upload_date = db.Column(db.Integer, default=lambda: int(time.time()))
+    height = db.Column(db.Integer)
+    width = db.Column(db.Integer)
 
     # Foreign key referencing the User model
     user_id = Column(db.String(36), ForeignKey('user.id'), nullable=False)
@@ -45,6 +47,11 @@ class Like(db.Model):
     __table_args__ = (
         db.UniqueConstraint('user_id', 'image_id', name='_user_image_uc'),
     )
+
+def dimen(filename):
+    image_path = os.path.join('static', 'uploads', filename)
+    with PILImage.open(image_path) as img:
+        return img.width, img.height
 
 @phostel.route('/')
 def index():
@@ -234,6 +241,7 @@ def post():
         img = PILImage.open(file)
         img = apply_exif_orientation(img)
         img = img.convert("RGB")
+        width, height = img.size
     except (IOError, SyntaxError) as e:
         return "File is not a valid image", 400
 
@@ -244,7 +252,6 @@ def post():
     ext = os.path.splitext(secure_filename(file.filename))[1]
     image_uuid = uuid.uuid4().hex
     original_filename = f"{image_uuid}{ext}"
-    thumbnail_filename = f"{image_uuid}{ext}"
 
     # Ensure upload folder exists
     upload_folder = current_app.config['UPLOAD_FOLDER']
@@ -255,14 +262,23 @@ def post():
     img.save(file_path, format="JPEG", quality=70, optimize=True)
 
     # Thumbnails
-    thumb_size = (512, 512)  # Adjust size as needed
+    thumb_size = (856, 856)  # Adjust size as needed
+    lqip_size = (10,10)
     thumb = img.copy()
+    lqip = img.copy()
     thumb.thumbnail(thumb_size)
+    lqip.thumbnail(lqip_size)
 
     thumb_folder = os.path.join(upload_folder, "thumbnails")
     os.makedirs(thumb_folder, exist_ok=True)
 
-    thumb_path = os.path.join(thumb_folder, thumbnail_filename)
+    lqip_folder = os.path.join(upload_folder, "lqip")
+    os.makedirs(thumb_folder, exist_ok=True)
+
+    lqip_path = os.path.join(lqip_folder, original_filename)
+    lqip.save(lqip_path, format="JPEG", quality=60, optimize=True)
+
+    thumb_path = os.path.join(thumb_folder, original_filename)
     thumb.save(thumb_path, format="JPEG", quality=60, optimize=True)
 
     # Save metadata to DB
@@ -272,7 +288,9 @@ def post():
         title=title,
         filepath=os.path.join("uploads", original_filename),
         tag=tag,
-        user=current_user
+        user=current_user,
+        width=width,
+        height=height
     )
 
     db.session.add(new_image)

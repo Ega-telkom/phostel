@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='photoswipe/photoswipe.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=chevron_right,delete,download,favorite,local_police,logout,menu,search,share,upload" rel="stylesheet"/>    
     <meta name="theme-color" content="#DADADA">
 </head>
 
@@ -33,9 +33,16 @@
 
     <main class="lg:mt-18 mt-20 mx-auto max-w-7xl text-sm m-5 p-3">
         <div class="item-baseline mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-10 mb-10">
-            <div id="gallery" class="grid justify-items-center place-content-center bg-neutral-400 rounded-sm overflow-hidden">
+            <div id="gallery" class="bg-neutral-400 rounded-md overflow-hidden">
                 <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}" data-pswp-width="{{ dimen.width }}" data-pswp-height="{{ dimen.height }}">
-                    <img class="lg:max-h-[calc(100vh-6rem)] hover:brightness-70" src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}" alt="{{ image.title or image.filename }}">
+                    <img
+                    src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
+                    class="gallery"
+                    data-src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}"
+                    loading="eager"
+                    style="aspect-ratio: {{ image.width }} / {{ image.height }};"
+                    alt="{{ image.title or image.filename }}"
+                    >
                 </a>
             </div>
             <div class="flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)] no-scrollbar">
@@ -136,25 +143,43 @@
 
     {% include 'footer.html' %}      
 
-    </body>
-    <script>
-        function copyToClipboard(text) {
-          navigator.clipboard.writeText(text)
-            .then(() => alert('Copied to clipboard!'))
-            .catch(err => alert('Failed to copy: ' + err));
+</body>
+
+<script>
+    // Script goes just before </body>
+    // Script from https://varvy.com/pagespeed/defer-images.html
+    function init() {
+        var imgDefer = document.getElementsByClassName('gallery');
+        for (var i = 0; i < imgDefer.length; i++) {
+            if (imgDefer[i].getAttribute('data-src')) {
+            imgDefer[i].onload = function () {
+                this.classList.add('loaded');
+            };
+            imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
+            }
         }
-    </script>
+    }
+    window.onload = init;
+</script>
 
-    <script type="module">
-        import PhotoSwipeLightbox from '/static/photoswipe/photoswipe-lightbox.esm.js';
-        import PhotoSwipe from '/static/photoswipe/photoswipe.esm.js';
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+        .then(() => alert('Copied to clipboard!'))
+        .catch(err => alert('Failed to copy: ' + err));
+    }
+</script>
 
-        const lightbox = new PhotoSwipeLightbox({
-            gallery: '#gallery',
-            children: 'a',
-            pswpModule: () => PhotoSwipe
-        });
-        lightbox.init();
-    </script>
+<script type="module">
+    import PhotoSwipeLightbox from '/static/photoswipe/photoswipe-lightbox.esm.js';
+    import PhotoSwipe from '/static/photoswipe/photoswipe.esm.js';
+
+    const lightbox = new PhotoSwipeLightbox({
+        gallery: '#gallery',
+        children: 'a',
+        pswpModule: () => PhotoSwipe
+    });
+    lightbox.init();
+</script>
 
 </html>
