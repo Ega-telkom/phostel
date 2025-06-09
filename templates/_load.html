@@ -18,7 +18,7 @@
                 <div class="md:rounded-md overflow-hidden">
                     <img
                         src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
-                        class="gallery bg-neutral-400"
+                        class="gallery bg-neutral-400 hover:brightness-70"
                         data-src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}"
                         loading="eager"
                         style="aspect-ratio: {{ image.width }} / {{ image.height }};"

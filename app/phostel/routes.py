@@ -66,9 +66,16 @@ def index():
 @phostel.route('/load')
 def load():
     page = request.args.get('page', 1, type=int)
-    per_page = 3
+    per_page = 6
     images = Image.query.order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
-    return render_template('_memuat.html', images=images.items, page=page, has_next=images.has_next)
+    return render_template('_load.html', images=images.items, page=page, has_next=images.has_next)
+
+@phostel.route('/load_related')
+def load_related():
+    page = request.args.get('page', 1, type=int)
+    per_page = 6
+    images = Image.query.filter(Image.user_id == image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+    return render_template('_load_related.html', images=images.items, page=page, has_next=images.has_next)
 
 @phostel.route('/upload')
 @login_required
@@ -79,6 +86,7 @@ def upload():
 @phostel.route('/phostel/<uuid:item_id>')
 def images(item_id):
     image = Image.query.get(str(item_id))
+    user = image.user
 
     image_path = os.path.join(os.getcwd(), 'static', 'uploads', image.filename)
 
@@ -93,8 +101,9 @@ def images(item_id):
     
     auth = current_user.is_authenticated
     
-    user = image.user
-    user_img = Image.query.filter(Image.user_id == user.id, Image.id != image.id).all()
+    page = 1
+    per_page = 6
+    images = Image.query.filter(Image.user_id == image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
 
     humanize.i18n.activate("id_ID")
     humanized_time = humanize.naturaltime(datetime.fromtimestamp(image.upload_date))
@@ -104,7 +113,7 @@ def images(item_id):
 
     like_count = Like.query.filter_by(image_id=image.id).count()
 
-    return render_template('gambar.html', image=image, humanized_time=humanized_time, images=user_img, auth=auth, user=user, current_user=current_user, tags=image.tag, liked=liked, like_count=like_count, dimen={'width': width, 'height': height})
+    return render_template('gambar.html', image=image, humanized_time=humanized_time, images=images.items, auth=auth, user=user, current_user=current_user, tags=image.tag, liked=liked, like_count=like_count, dimen={'width': width, 'height': height})
 
 @phostel.route('/u/<user_id>')
 def user(user_id):
@@ -273,10 +282,10 @@ def post():
     os.makedirs(thumb_folder, exist_ok=True)
 
     lqip_folder = os.path.join(upload_folder, "lqip")
-    os.makedirs(thumb_folder, exist_ok=True)
+    os.makedirs(lqip_folder, exist_ok=True)
 
     lqip_path = os.path.join(lqip_folder, original_filename)
-    lqip.save(lqip_path, format="JPEG", quality=60, optimize=True)
+    lqip.save(lqip_path, format="JPEG", quality=40, optimize=True)
 
     thumb_path = os.path.join(thumb_folder, original_filename)
     thumb.save(thumb_path, format="JPEG", quality=60, optimize=True)

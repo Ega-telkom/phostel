@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/output.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='photoswipe/photoswipe.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=chevron_right,delete,download,favorite,local_police,logout,menu,search,share,upload" rel="stylesheet"/>    
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=chevron_right,close,delete,download,favorite,link,local_police,logout,menu,search,share,upload" rel="stylesheet"/>    
     <meta name="theme-color" content="#DADADA">
 </head>
 
@@ -62,7 +63,7 @@
                     >
                 </a>
             </div>
-            <div class="flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-6rem)] no-scrollbar px-3">
+            <div class="flex flex-col gap-3 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)] no-scrollbar px-3">
                 <div class="grid gap-3">
                     <p class="text-xl truncate">{{ image.title or image.filename }}</p>
                     <a class="md:flex hidden" href="{{ url_for('phostel.user', user_id=image.user_id) }}">
@@ -116,14 +117,13 @@
                 <p class="text-xl mt-4 mb-2">Unggahan lain oleh {{ image.user.username }}</p>
                 {% endif %}
                 <div class="column">
-                    <!-- {% for image in images %}
-                    <div class="box">
-                        <a href="{{ url_for('phostel.images', item_id=image.id) }}">
-                            <img class="gallery" loading="lazy" src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}" alt="{{ image.title or image.filename }}" width="200" href>
-                        </a>
-                    </div>
-                    {% endfor %} -->
+                    {% include "_load_related.html" %}
                 </div>
+                {% if has_next %}
+                <div hx-get="{{ url_for('phostel.load-related') }}?page={{ page + 1 }}" hx-trigger="revealed" hx-swap="outerHTML"
+                    class="load-trigger">
+                </div>
+                {% endif %}
             </div>
         </div>
     </main>

@@ -12,7 +12,6 @@
     <script src="{{ url_for('static', filename='scripts/script.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=chevron_right,delete,download,favorite,local_police,logout,menu,progress_activity,search,share,upload" rel="stylesheet"/>    
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
     <meta name="theme-color" content="#DADADA">
 </head>
@@ -24,7 +23,7 @@
     <main class="mt-20 mx-auto max-w-7xl text-sm m-5 md:p-2">
         <!-- <p class="mb-5 !text-base">Satu gambar, memiliki seribu kata. <span class="text-biru-politik">Telusuri kata tersebut diatas <span class="material-symbols-outlined">arrow_insert</span></span></p> -->
         <div class="column" id="image-container">
-            {% include "_memuat.html" %}
+            {% include "_load.html" %}
         </div>
         <div id="loading-indicator" class="flex justify-center mt-4" style="display:none;">
             <span class="loading material-symbols-outlined text-abu-gelap text-4xl!">progress_activity</span>
@@ -49,22 +48,6 @@ document.body.addEventListener('htmx:afterSwap', function(evt) {
     document.getElementById('loading-indicator').style.display = 'none';
   }
 });
-</script>
-
-<script>
-  document.body.addEventListener('htmx:afterSwap', function (evt) {
-    // Check if we just swapped something after a .load-trigger
-    const trigger = evt.detail.elt;
-
-    if (trigger && trigger.classList.contains('load-trigger')) {
-      // Delay slightly to let DOM update
-      setTimeout(() => {
-        if (!document.querySelector('.load-trigger')) {
-          document.getElementById('habis').style.display = 'flex';
-        }
-      }, 0);
-    }
-  });
 </script>
 
 <script>
