@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ image.title or image.filename }}</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/favicon.png') }}">
+    <script src="{{ url_for('static', filename='scripts/script.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
@@ -51,7 +52,7 @@
                     <p class="text-sm text-abu-gelap mb-2">Diunggah {{ humanized_time }}</p>
                 </div>
             </a>
-            <div id="gallery" class="bg-neutral-400 md:rounded-md overflow-hidden">
+            <div id="gallery" class="lg:max-h-[calc(100vh-7rem)] place-content-center bg-neutral-400 md:rounded-md overflow-hidden">
                 <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}" data-pswp-width="{{ dimen.width }}" data-pswp-height="{{ dimen.height }}">
                     <img
                     src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
@@ -115,17 +116,14 @@
                 </div>
                 {% if images %}
                 <p class="text-xl mt-4 mb-2">Unggahan lain oleh {{ image.user.username }}</p>
-                {% endif %}
-                <div class="column">
+                <div class="column-small" id="related">
                     {% include "_load_related.html" %}
                     {% if has_next %}
-                    <div hx-get="{{ url_for('phostel.load') }}?page={{ page + 1 }}" hx-trigger="revealed" hx-swap="beforeend" hx-indicator="#loading-indicator" hx-target="#image-container" class="load-trigger">
-                        <div id="loading-indicator" class="flex htmx-indicator justify-center mt-4">
-                            <span class="loading material-symbols-outlined text-abu-gelap text-4xl!">progress_activity</span>
-                        </div>   
+                    <div hx-get="{{ url_for('phostel.load_related') }}?page={{ page + 1 }}&user_id={{ image.user.id }}&exclude_id={{ image.id }}" hx-trigger="intersect once" hx-swap="beforeend" hx-target="#related" class="load-trigger">
                     </div>
                     {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
     </main>
@@ -165,28 +163,31 @@
 </body>
 
 <script>
-    // Script goes just before </body>
-    // Script from https://varvy.com/pagespeed/defer-images.html
-    function init() {
-        var imgDefer = document.getElementsByClassName('gallery');
-        for (var i = 0; i < imgDefer.length; i++) {
-            if (imgDefer[i].getAttribute('data-src')) {
-            imgDefer[i].onload = function () {
-                this.classList.add('loaded');
-            };
-            imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
-            }
-        }
-    }
-    window.onload = init;
-</script>
-
-<script>
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text)
         .then(() => alert('Copied to clipboard!'))
         .catch(err => alert('Failed to copy: ' + err));
     }
+</script>
+
+
+<script>
+    function init() {
+        var imgDefer = document.getElementsByClassName('gallery');
+        for (var i = 0; i < imgDefer.length; i++) {
+            if (imgDefer[i].getAttribute('data-src') && !imgDefer[i].classList.contains('loaded')) {
+                imgDefer[i].onload = function () {
+                    this.classList.add('loaded');
+                };
+                imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
+            }
+        }
+    }
+    window.onload = init;
+
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+        init();
+    });
 </script>
 
 <script type="module">

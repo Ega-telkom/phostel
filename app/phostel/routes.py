@@ -52,16 +52,42 @@ def dimen(filename):
     image_path = os.path.join('static', 'uploads', filename)
     with PILImage.open(image_path) as img:
         return img.width, img.height
+    
+@phostel.route('/secret')
+def secret():
+    return "secret!"
 
 @phostel.route('/')
 def index():
     page = 1
     per_page = 6
-    images = Image.query.options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+
+    images_paginated = (
+        Image.query
+        .options(joinedload(Image.user))
+        .order_by(Image.upload_date.desc())
+        .paginate(page=page, per_page=per_page)
+    )
+
+    images = images_paginated.items
+
+    image_data = []
+    for image in images:
+        like_count = Like.query.filter_by(image_id=image.id).count()
+        liked = False
+        if current_user.is_authenticated:
+            liked = Like.query.filter_by(user_id=current_user.id, image_id=image.id).first() is not None
+
+        image_data.append({
+            'image': image,
+            'like_count': like_count,
+            'liked': liked
+        })
+
 
     auth = current_user.is_authenticated
     
-    return render_template('index.html', images=images.items, page=page, has_next=images.has_next, auth=auth, current_user=current_user)
+    return render_template('index.html', images=image_data, page=page, has_next=images_paginated.has_next, auth=auth, current_user=current_user)
 
 @phostel.route('/load')
 def load():
@@ -73,9 +99,37 @@ def load():
 @phostel.route('/load_related')
 def load_related():
     page = request.args.get('page', 1, type=int)
+    user_id = request.args.get('user_id')
+    exclude_id = request.args.get('exclude_id')
+
+    query = Image.query.filter(Image.user_id == user_id)
+    if exclude_id:
+        query = query.filter(Image.id != exclude_id)
+
     per_page = 6
-    images = Image.query.filter(Image.user_id == Image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
-    return render_template('_load_related.html', images=images.items, page=page, has_next=images.has_next)
+
+    images = query.options(joinedload(Image.user)) \
+                  .order_by(Image.upload_date.desc()) \
+                  .paginate(page=page, per_page=per_page)
+    
+    return render_template('_load_related.html', images=images.items, page=page, has_next=images.has_next, user_id=user_id, exclude_id=exclude_id)
+
+@phostel.route('/load_user')
+def load_user():
+    page = request.args.get('page', 1, type=int)
+    user_id = request.args.get('user_id')
+
+    if not user_id:
+        return "Missing user_id", 400
+
+    query = Image.query.filter(Image.user_id == user_id)
+
+    per_page = 6
+
+    images = query.order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+    
+    return render_template('_load_related.html', images=images.items, page=page, has_next=images.has_next, user_id=user_id)
+
 
 @phostel.route('/upload')
 @login_required
@@ -103,7 +157,7 @@ def images(item_id):
     
     page = 1
     per_page = 6
-    images = Image.query.filter(Image.user_id == Image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+    images = Image.query.filter(Image.user_id == image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
 
     humanize.i18n.activate("id_ID")
     humanized_time = humanize.naturaltime(datetime.fromtimestamp(image.upload_date))
@@ -126,12 +180,17 @@ def user(user_id):
     humanize.i18n.activate("id_ID")
     humanized_time = humanize.naturaltime(datetime.fromtimestamp(user.birth))
 
-    images = Image.query.filter_by(user_id=user_id).all()
+    query = Image.query.filter(Image.user_id == user_id)
+
+    page = request.args.get('page', 1, type=int)
+    per_page = 6
+
+    images = query.order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
     upload_count = Image.query.filter_by(user_id=user.id).count()
 
     owner = current_user.is_authenticated and current_user.id == user_id
 
-    return render_template('user.html', user=user, images=images, owner=owner, upload_count=upload_count, auth=auth, humanized_time=humanized_time)
+    return render_template('user.html', user=user, images=images, owner=owner, upload_count=upload_count, auth=auth, has_next=images.has_next, page=page, humanized_time=humanized_time)
 
 @phostel.route('/s')
 def search():

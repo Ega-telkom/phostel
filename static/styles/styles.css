@@ -28,10 +28,18 @@
 
 .column {
     max-width: 1280px;
-    columns: 4 256px;
+    columns: 3 24rem;
     column-gap: 0.5rem;
     font-size: 1.2rem;
 }
+
+.column-small {
+    max-width: 1280px;
+    columns: 3 15rem;
+    column-gap: 0.5rem;
+    font-size: 1.2rem;
+}
+
 .box {
     color: white;
     margin: 0 0 0.2rem;
@@ -41,12 +49,8 @@
   
 .gallery {
     width: 100%;
-    object-position: center;
-    object-fit: cover;
-    display: block;
-    transform: scale(1.2);
-    filter: blur(8px) brightness(90%);
-    transition: filter 0.4s ease;
+    filter: blur(20px) brightness(90%);
+    transition: filter 0.2s ease-out;
 }
 
 .gallery.loaded {

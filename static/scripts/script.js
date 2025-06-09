@@ -1,16 +1,16 @@
-const searchToggle = document.getElementById('search-toggle');
-const searchWrapper = document.getElementById('search-wrapper');
-const searchClose = document.getElementById('search-close');
-const navActions = document.getElementById('nav-actions');
+function init() {
+    var imgDefer = document.getElementsByClassName('gallery');
+    for (var i = 0; i < imgDefer.length; i++) {
+        if (imgDefer[i].getAttribute('data-src') && !imgDefer[i].classList.contains('loaded')) {
+            imgDefer[i].onload = function () {
+                this.classList.add('loaded');
+            };
+            imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
+        }
+    }
+}
+window.onload = init;
 
-searchToggle.addEventListener('click', () => {
-searchWrapper.classList.remove('hidden');
-navActions.classList.add('hidden');
-searchToggle.classList.add('hidden');
-});
-
-searchClose.addEventListener('click', () => {
-searchWrapper.classList.add('hidden');
-navActions.classList.remove('hidden');
-searchToggle.classList.remove('hidden');
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    init();
 });
