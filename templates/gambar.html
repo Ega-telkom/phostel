@@ -118,12 +118,14 @@
                 {% endif %}
                 <div class="column">
                     {% include "_load_related.html" %}
+                    {% if has_next %}
+                    <div hx-get="{{ url_for('phostel.load') }}?page={{ page + 1 }}" hx-trigger="revealed" hx-swap="beforeend" hx-indicator="#loading-indicator" hx-target="#image-container" class="load-trigger">
+                        <div id="loading-indicator" class="flex htmx-indicator justify-center mt-4">
+                            <span class="loading material-symbols-outlined text-abu-gelap text-4xl!">progress_activity</span>
+                        </div>   
+                    </div>
+                    {% endif %}
                 </div>
-                {% if has_next %}
-                <div hx-get="{{ url_for('phostel.load-related') }}?page={{ page + 1 }}" hx-trigger="revealed" hx-swap="outerHTML"
-                    class="load-trigger">
-                </div>
-                {% endif %}
             </div>
         </div>
     </main>

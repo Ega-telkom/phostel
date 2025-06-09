@@ -1,0 +1,14 @@
+{% for image in images %}
+    <a href="{{ url_for('phostel.images', item_id=image.id) }}">
+        <div class="md:rounded-md overflow-hidden mb-2">
+            <img
+                src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
+                class="gallery bg-neutral-400 hover:brightness-70"
+                data-src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}"
+                loading="eager"
+                style="aspect-ratio: {{ image.width }} / {{ image.height }};"
+                alt="{{ image.title or image.filename }}"
+            >
+        </div>
+    </a>
+{% endfor %}

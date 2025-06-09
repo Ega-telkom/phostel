@@ -74,7 +74,7 @@ def load():
 def load_related():
     page = request.args.get('page', 1, type=int)
     per_page = 6
-    images = Image.query.filter(Image.user_id == image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+    images = Image.query.filter(Image.user_id == Image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
     return render_template('_load_related.html', images=images.items, page=page, has_next=images.has_next)
 
 @phostel.route('/upload')
@@ -103,7 +103,7 @@ def images(item_id):
     
     page = 1
     per_page = 6
-    images = Image.query.filter(Image.user_id == image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
+    images = Image.query.filter(Image.user_id == Image.user_id, Image.id != image.id).options(joinedload(Image.user)).order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
 
     humanize.i18n.activate("id_ID")
     humanized_time = humanize.naturaltime(datetime.fromtimestamp(image.upload_date))
@@ -113,7 +113,7 @@ def images(item_id):
 
     like_count = Like.query.filter_by(image_id=image.id).count()
 
-    return render_template('gambar.html', image=image, humanized_time=humanized_time, images=images.items, auth=auth, user=user, current_user=current_user, tags=image.tag, liked=liked, like_count=like_count, dimen={'width': width, 'height': height})
+    return render_template('gambar.html', image=image, page=page, has_next=images.has_next, humanized_time=humanized_time, images=images.items, auth=auth, user=user, current_user=current_user, tags=image.tag, liked=liked, like_count=like_count, dimen={'width': width, 'height': height})
 
 @phostel.route('/u/<user_id>')
 def user(user_id):
