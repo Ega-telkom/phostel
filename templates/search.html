@@ -21,9 +21,25 @@
     {% include 'navbar.html' %}
 
     <main class="mt-20 mx-auto max-w-7xl text-sm m-5 md:p-2">
+        {% if query %}
+            <p class="text-abu-gelap text-2xl mb-5">Hasil dari "{{ query }}"</p>
+        {% endif %}
         <!-- <p class="mb-5 !text-base">Satu gambar, memiliki seribu kata. <span class="text-biru-politik">Telusuri kata tersebut diatas <span class="material-symbols-outlined">arrow_insert</span></span></p> -->
         <div class="column" id="image-container">
-            {% include "_load.html" %}
+            {% for image in images %}
+            <div class="box">
+                <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}">
+                    <img
+                    src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
+                    class="gallery"
+                    data-src="{{ url_for('static', filename='uploads/thumbnails/' + image.filename) }}"
+                    loading="eager"
+                    style="aspect-ratio: {{ image.width }} / {{ image.height }};"
+                    alt="{{ image.title or image.filename }}"
+                    >
+                </a>
+            </div>
+            {% endfor %}
         </div> 
 
         {% if has_next %}

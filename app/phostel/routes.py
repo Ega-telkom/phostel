@@ -93,8 +93,30 @@ def index():
 def load():
     page = request.args.get('page', 1, type=int)
     per_page = 6
-    images = Image.query.order_by(Image.upload_date.desc()).paginate(page=page, per_page=per_page)
-    return render_template('_load.html', images=images.items, page=page, has_next=images.has_next)
+
+    images_paginated = (
+        Image.query
+        .options(joinedload(Image.user))
+        .order_by(Image.upload_date.desc())
+        .paginate(page=page, per_page=per_page)
+    )
+
+    images = images_paginated.items
+
+    image_data = []
+    for image in images:
+        like_count = Like.query.filter_by(image_id=image.id).count()
+        liked = False
+        if current_user.is_authenticated:
+            liked = Like.query.filter_by(user_id=current_user.id, image_id=image.id).first() is not None
+
+        image_data.append({
+            'image': image,
+            'like_count': like_count,
+            'liked': liked
+        })
+
+    return render_template('_load.html', images=image_data, page=page, has_next=images_paginated.has_next)
 
 @phostel.route('/load_related')
 def load_related():
@@ -225,7 +247,7 @@ def search():
         if not results:
             return render_template('404.html', query=query, auth=auth, current_user=current_user, user=user), 404  # Return a 404 page manually
 
-        return render_template('index.html', images=results, query=query, current_user=current_user, auth=auth)
+        return render_template('search.html', images=results, query=query, current_user=current_user, auth=auth)
 
 @phostel.route('/u/s/profile', methods=['GET', 'POST'])
 @login_required
@@ -401,7 +423,18 @@ def like(image_id):
         image.like = (image.like or 0) + 1
 
     db.session.commit()
-    return redirect(request.referrer or url_for('phostel.index'))
+
+    like_count = image.like or 0
+    liked = Like.query.filter_by(user_id=current_user.id, image_id=image.id).first() is not None
+
+    return render_template_string('''
+    {% if liked %}
+      <span style="font-variation-settings: 'FILL' 1" class="cursor-pointer material-symbols-outlined mr-1 text-merah-merona">favorite</span>
+    {% else %}
+      <span class="cursor-pointer text-abu-gelap material-symbols-outlined mr-1">favorite</span>
+    {% endif %}
+    <span class="text-sm text-abu-gelap">{{ like_count }}</span>
+    ''', liked=liked, like_count=like_count)
 
 @phostel.route('/del/<uuid:image_id>', methods=['POST'])
 @login_required

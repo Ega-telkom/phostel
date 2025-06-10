@@ -53,7 +53,7 @@
                 </div>
             </a>
             <div id="gallery" class="lg:max-h-[calc(100vh-7rem)] place-content-center bg-neutral-400 md:rounded-md overflow-hidden">
-                <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}" data-pswp-width="{{ dimen.width }}" data-pswp-height="{{ dimen.height }}">
+                <a class="cursor-zoom-in" href="{{ url_for('static', filename='uploads/' + image.filename) }}" data-pswp-width="{{ image.width }}" data-pswp-height="{{ image.height }}">
                     <img
                     src="{{ url_for('static', filename='uploads/lqip/' + image.filename) }}"
                     class="gallery"
@@ -98,16 +98,23 @@
                     <div class="flex gap-5">
                         <a href="{{ url_for('phostel.download', image_id=image.id) }}" download class="active:bg-sky-900 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md"><span class="material-symbols-outlined mr-2">download</span>Unduh</a>
                         <button data-dropdown-toggle="share" class="cursor-pointer flex items-center text-abu-gelap"><span class="material-symbols-outlined">share</span></button>
-                        <form method="POST" action="{{ url_for('phostel.like', image_id=image.id) }}" class="flex items-center text-abu-gelap">
-                            <button type="submit" class="flex items-center">
+                        <button 
+                            type="button"
+                            hx-post="/like/{{ image.id }}"
+                            hx-swap="innerHTML"
+                            hx-target="#like-container-{{ image.id }}"
+                            hx-trigger="click"
+                            class="flex items-center text-abu-gelap"
+                        >
+                            <span id="like-container-{{ image.id }}" class="flex items-center">
                                 {% if current_user.is_authenticated and liked %}
-                                <span style="font-variation-settings: 'FILL' 1" class="material-symbols-outlined mr-1 cursor-pointer text-merah-merona">favorite</span> <!-- filled heart -->
+                                <span style="font-variation-settings: 'FILL' 1" class="cursor-pointer material-symbols-outlined mr-1 text-merah-merona">favorite</span>
                                 {% else %}
-                                <span class="material-symbols-outlined mr-1 cursor-pointer">favorite</span> <!-- empty heart -->
+                                <span class="cursor-pointer material-symbols-outlined mr-1">favorite</span>
                                 {% endif %}
-                            </button>
-                            <span>{{ like_count }}</span>
-                        </form>
+                                <span class="text-sm">{{ like_count }}</span>
+                            </span>
+                        </button>
                         {% if current_user.is_authenticated and (image.user_id == current_user.id or current_user.admin) %}
                         <button data-modal-target="hapus" class="cursor-pointer flex items-center text-abu-gelap" data-modal-toggle="hapus" type="button"><span class="material-symbols-outlined">delete</span></button>
                         {% else %}

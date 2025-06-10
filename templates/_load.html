@@ -27,20 +27,23 @@
             </a>
             <div class="md:hidden flex mb-10 mt-3 px-2 border-solid gap-3">
                 <a href="{{ url_for('phostel.download', image_id=data.image.id) }}" download class="active:bg-sky-900 hover:bg-sky-600 flex item-center bg-biru-politik text-abu-indie p-2 rounded-md text-sm"><span class="material-symbols-outlined mr-2">download</span>Unduh</a>
-                <form method="POST" action="{{ url_for('phostel.like', image_id=data.image.id) }}" class="flex items-center text-abu-gelap">
-                    <button type="submit" class="flex items-center">
-                        {% if current_user.is_authenticated and data.liked %}
-                        <span style="font-variation-settings: 'FILL' 1" class="material-symbols-outlined mr-1 cursor-pointer text-merah-merona">favorite</span> <!-- filled heart -->
-                        {% else %}
-                        <span class="material-symbols-outlined mr-1 cursor-pointer">favorite</span> <!-- empty heart -->
-                        {% endif %}
-                    </button>
+            <button 
+                type="button"
+                hx-post="/like/{{ data.image.id }}"
+                hx-swap="innerHTML"
+                hx-target="#like-container-{{ data.image.id }}"
+                hx-trigger="click"
+                class="flex items-center text-abu-gelap"
+            >
+                <span id="like-container-{{ data.image.id }}" class="flex items-center">
+                    {% if current_user.is_authenticated and data.liked %}
+                      <span style="font-variation-settings: 'FILL' 1" class="cursor-pointer material-symbols-outlined mr-1 text-merah-merona">favorite</span>
+                    {% else %}
+                      <span class="cursor-pointer material-symbols-outlined mr-1">favorite</span>
+                    {% endif %}
                     <span class="text-sm">{{ data.like_count }}</span>
-                </form>
-                {% if current_user.is_authenticated and (data.image.user_id == current_user.id or current_user.admin) %}
-                <button data-modal-target="hapus" class="cursor-pointer flex items-center text-abu-gelap" data-modal-toggle="hapus" type="button"><span class="material-symbols-outlined">delete</span></button>
-                {% else %}
-                {% endif %}
+                </span>
+            </button>
             </div>
     </div>
 {% endfor %}
